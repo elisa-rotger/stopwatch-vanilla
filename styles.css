@@ -1,0 +1,27 @@
+.outer {
+    display: table;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.middle {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.inner {
+    margin-left: auto;
+    margin-right: auto;
+    width: 400px;
+    height: 600px;
+    display: grid;
+    grid-template-rows: auto 20% auto;
+    background-color: #101010;
+}
+
+.inner div {
+    border: 1px solid white
+}
