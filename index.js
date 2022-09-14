@@ -9,12 +9,20 @@ let interval;
 stopButton.innerHTML = 'Start';
 lapButton.innerHTML = 'Reset';
 
-// click event on the start / stop button
-// TODO: figure out how to make it stop with the same button
-
 stopButton.addEventListener('click', () => {
     isRunning ? (pauseButton()) : (interval = setInterval(timerDisplay, 10));
 });
+
+lapButton.addEventListener('click', () => {
+    if (isRunning) {
+        console.log(interval)
+    } else {
+        // reset: clear interval, set everything to 0, keep clock turned off
+        clearInterval(interval);
+        let [minutes, seconds, milliseconds] = [0, 0, 0];
+        timer.innerHTML = '00:00.00';
+    }
+})
 
 // set up the display of the timer -> increase ms, s and m accordingly
 timerDisplay = () => {
@@ -40,7 +48,7 @@ timerDisplay = () => {
     let min = minutes < 10 ? '0' + minutes : minutes;
 
     // add these to html
-    timer.innerHTML = `${min}:${s}.${ms}`
+    timer.innerHTML = `${min}:${s}.${ms}`;
 }
 
 pauseButton = () => {
