@@ -1,3 +1,24 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: Helvetica, sans-serif
+}
+
+.inner {
+    width: 350px;
+    height: 600px;
+    margin: auto;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: grid;
+    grid-template-rows: auto 20% auto;
+    background-color: #101010;
+}
+
 .crontab {
     color: white;
     display: flex;
@@ -5,41 +26,17 @@
     align-items: center;
 }
 
-.outer {
-    display: table;
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-}
-
-.middle {
-    display: table-cell;
-    vertical-align: middle;
-}
-
-.inner {
-    margin-left: auto;
-    margin-right: auto;
-    width: 350px;
-    height: 600px;
-    display: grid;
-    grid-template-rows: auto 20% auto;
-    background-color: #101010;
-}
-
 .buttons-container {
     display: grid;
-    grid-template-columns: auto 100px auto;
+    grid-template-columns: 125px 100px 125px;
 }
 
 .button {
-    padding: 15%;
+    padding: 10%;
 }
 
 .out {
-    border: 1px solid black;
+    border: 1px solid #101010;
     background-color: #48484A;
     padding-top: 1px;
     border-radius: 50%;
@@ -51,10 +48,12 @@
     justify-content: center;
     cursor: pointer;
     font-size: larger;
+    font-weight: 350;
 }
 
 .reset {
     background-color: #3e3e3e;
+    box-shadow: 0 0 0 1px #3e3e3e, inset 0 0 0 1px #101010;
     color: #fdfdfd;
 }
 
@@ -65,11 +64,13 @@
 
 .start {
     background-color: #172e1c;
+    box-shadow: 0 0 0 1px #172e1c, inset 0 0 0 1px #101010;
     color: #50d963;
 }
 
 .stop {
     background-color: #331314;
+    box-shadow: 0 0 0 1px #331314, inset 0 0 0 1px #101010;
     color: #f24034;
     /* opacity: 50%; */
 }
