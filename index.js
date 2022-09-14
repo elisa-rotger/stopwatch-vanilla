@@ -19,18 +19,9 @@ lapButton.addEventListener('click', () => {
     } else {
         // RESET: clear interval, set everything to 0, keep clock turned off
         clearInterval(interval);
-        [minutes, seconds, milliseconds] = [0, 0, 0];
-        [ms, s, min] = [0, 0, 0];
-        laps = [];
-        let lapsList = document.getElementById('laps-list');
-        lapsList.replaceChildren();
-        let lapNum = document.getElementById('laps-number');
-        lapNum.replaceChildren();
-        timer.innerHTML = '00:00.00';
+        empty();
     }
 })
-
-// TODO: Helper function empty() that empties an element. Should treat the lap list differently
 
 timerDisplay = () => {
     isRunning = true;
@@ -95,8 +86,6 @@ recordLap = () => {
         lapNum.removeChild(lapNum.lastElementChild);
     }
 
-    //TODO: Improve styling -> the border boxes for the list elements are already there BEFORE adding the laps, not added with them
-
     //TODO: Find the lap with highest / lowest value and change their color accordingly
 }
 
@@ -110,4 +99,31 @@ convertToValue = (totalMs) => {
     minLap = minLap < 10 ? '0' + minLap : minLap;
 
     return `${minLap}:${sLap}.${msLap.toString().slice(0, -1)}`;
+}
+
+empty = () => {
+    [minutes, seconds, milliseconds] = [0, 0, 0];
+    [ms, s, min] = [0, 0, 0];
+    laps = [];
+
+    let lapNum = document.getElementById('laps-number');
+    lapNum.replaceChildren();
+
+    let lapsList = document.getElementById('laps-list');
+    lapsList.replaceChildren();
+
+    for (let i = 1; i <= 6; i++) {
+        const classesValue = ['lap', 'empty'];
+        const classesNumber = ['lap-num', 'empty'];
+
+        let defaultLapVal = document.createElement('li');
+        defaultLapVal.classList.add(...classesValue);
+        lapsList.appendChild(defaultLapVal);
+
+        let defaultLapNum = document.createElement('li');
+        defaultLapNum.classList.add(...classesNumber);
+        lapNum.appendChild(defaultLapNum);
+    }
+
+    timer.innerHTML = '00:00.00';
 }
