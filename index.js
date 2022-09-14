@@ -1,4 +1,3 @@
-// initialize time counters
 let [minutes, seconds, milliseconds] = [0, 0, 0];
 let timer = document.getElementById('timer');
 let stopButton = document.getElementById('start-stop');
@@ -49,12 +48,11 @@ timerDisplay = () => {
         }
     }
 
-    // TODO: figure out how to remove the last 0 in the milliseconds
     ms = milliseconds < 100 ? '0' + milliseconds : milliseconds;
     s = seconds < 10 ? '0' + seconds : seconds;
     min = minutes < 10 ? '0' + minutes : minutes;
 
-    timer.innerHTML = `${min}:${s}.${ms}`;
+    timer.innerHTML = `${min}:${s}.${ms.toString().slice(0, -1)}`;
 }
 
 pauseButton = () => {
@@ -74,9 +72,6 @@ recordLap = () => {
         laps.push({ id: laps.length, value: value, total: totalTime });
     } else {
         let intervalLap = totalTime - laps[laps.length-1].total;
-        console.log(laps, intervalLap)
-        console.log(totalTime, typeof totalTime)
-        console.log(laps[laps.length-1].total, typeof laps[laps.length-1].total)
         value = convertToValue(intervalLap);
         laps.push({ id: laps.length, value: value, total: totalTime });
     }
@@ -104,10 +99,9 @@ convertToValue = (totalMs) => {
     let sLap = Math.floor((totalMs % 60000) / 1000);
     let msLap = totalMs - (minLap * 60000) - (sLap * 1000);
 
-    console.log(minLap, sLap, msLap, totalMs)
     msLap = msLap < 100 ? '0' + msLap : msLap;
     sLap = sLap < 10 ? '0' + sLap : sLap;
     minLap = minLap < 10 ? '0' + minLap : minLap;
 
-    return `${minLap}:${sLap}.${msLap}`;
+    return `${minLap}:${sLap}.${msLap.toString().slice(0, -1)}`;
 }
