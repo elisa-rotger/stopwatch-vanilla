@@ -2,7 +2,8 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
-    font-family: Helvetica, sans-serif
+    /* font-family: 'HelveticaNeue-UltraLight', cursive; */
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;;
 }
 
 .inner {
@@ -15,7 +16,7 @@
     top: 0;
     bottom: 0;
     display: grid;
-    grid-template-rows: auto 20% auto;
+    grid-template-rows: 270px 100px 185px;
     background-color: #101010;
 }
 
@@ -24,15 +25,19 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    font-size: 4.5em;
+    font-weight: 100;
+    padding-top: 65px;
 }
 
 .buttons-container {
+    padding: 0 10px;
     display: grid;
-    grid-template-columns: 125px 100px 125px;
+    grid-template-columns: 100px 130px 100px;
 }
 
 .button {
-    padding: 10%;
+    padding: 13%;
 }
 
 .out {
@@ -40,14 +45,13 @@
     background-color: #48484A;
     padding-top: 1px;
     border-radius: 50%;
-    /* border-style: double; */
     height: 100%;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: larger;
+    font-size: 200;
     font-weight: 350;
 }
 
@@ -55,26 +59,19 @@
     background-color: #3e3e3e;
     box-shadow: 0 0 0 1px #3e3e3e, inset 0 0 0 1px #101010;
     color: #fdfdfd;
+    color: rgba(253, 253, 253, 0.8)
 }
-
-/* .lap {
-    background-color: #3e3e3e;
-    color: #fdfdfd;
-} */
 
 .start {
     background-color: #172e1c;
     box-shadow: 0 0 0 1px #172e1c, inset 0 0 0 1px #101010;
     color: #50d963;
+    color: rgba(80, 217, 99, 0.8)
 }
 
 .stop {
     background-color: #331314;
     box-shadow: 0 0 0 1px #331314, inset 0 0 0 1px #101010;
     color: #f24034;
-    /* opacity: 50%; */
-}
-
-.buttons div {
-    /* border: 1px solid white; */
+    color: rgba(242, 64, 52, 0.8)
 }

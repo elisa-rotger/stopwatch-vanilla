@@ -40,7 +40,7 @@ timerDisplay = () => {
     let min = minutes < 10 ? '0' + minutes : minutes;
 
     // add these to html
-    timer.innerHTML = `${min} : ${s} : ${ms}`
+    timer.innerHTML = `${min}:${s}.${ms}`
 }
 
 pauseButton = () => {
