@@ -29,35 +29,49 @@
     background-color: #101010;
 }
 
-.buttons {
+.buttons-container {
     display: grid;
-    grid-template-columns: auto 35% auto;
+    grid-template-columns: auto 100px auto;
 }
 
-.lap {
+.button {
     padding: 15%;
 }
 
 .out {
     border: 1px solid black;
+    background-color: #48484A;
     padding-top: 1px;
     border-radius: 50%;
     /* border-style: double; */
-    border: 1px solid black;
     height: 100%;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+    font-size: larger;
 }
 
-.grey {
-    background-color: #48484A;
+.reset {
+    background-color: #3e3e3e;
+    color: #fdfdfd;
 }
 
-.red {
-    background-color: #FF375F;;
-    opacity: 50%;
+/* .lap {
+    background-color: #3e3e3e;
+    color: #fdfdfd;
+} */
+
+.start {
+    background-color: #172e1c;
+    color: #50d963;
+}
+
+.stop {
+    background-color: #331314;
+    color: #f24034;
+    /* opacity: 50%; */
 }
 
 .buttons div {
