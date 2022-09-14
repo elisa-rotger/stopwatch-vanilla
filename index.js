@@ -89,6 +89,12 @@ recordLap = () => {
     let lapNum = document.getElementById('laps-number');
     lapNum.insertBefore(num, lapNum.firstChild);
 
+    let lastLapClasses = lapsList.lastElementChild.classList;
+    if (lastLapClasses.contains('empty')) {
+        lapsList.removeChild(lapsList.lastElementChild);
+        lapNum.removeChild(lapNum.lastElementChild);
+    }
+
     //TODO: Improve styling -> the border boxes for the list elements are already there BEFORE adding the laps, not added with them
 
     //TODO: Find the lap with highest / lowest value and change their color accordingly
