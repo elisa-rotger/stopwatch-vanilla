@@ -1,5 +1,4 @@
 * {
-    padding: 0;
     margin: 0;
     box-sizing: border-box;
     /* font-family: 'HelveticaNeue-UltraLight', cursive; */
@@ -7,8 +6,8 @@
 }
 
 .inner {
-    width: 350px;
-    height: 600px;
+    width: 340px;
+    height: 750px;
     margin: auto;
     position: absolute;
     left: 0;
@@ -16,7 +15,7 @@
     top: 0;
     bottom: 0;
     display: grid;
-    grid-template-rows: 270px 100px 185px;
+    grid-template-rows: 310px 100px 320px;
     background-color: #101010;
 }
 
@@ -37,7 +36,8 @@
 .buttons-container {
     padding: 0 10px;
     display: grid;
-    grid-template-columns: 100px 130px 100px;
+    grid-template-columns: 100px 120px 100px;
+    /* border-bottom: 1px solid #3a3a3a; */
 }
 
 .button {
@@ -85,6 +85,11 @@
 .laps-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    padding: 3%;
+    overflow: hidden;
+    overflow-y: auto;
+    font-size: small;
+    margin-right: 2px;
 }
 
 .laps {
@@ -94,13 +99,40 @@
 }
 .lap {
     text-align: right;
-    padding: 5% 10%;
+    padding: 7%;
     border-top: 1px solid #3a3a3a;
-    border-bottom: 1px solid #3a3a3a;
+    /* border-bottom: 1px solid #3a3a3a; */
 }
 
 .lap-num {
-    padding: 5% 10%;
+    padding: 7%;
     border-top: 1px solid #3a3a3a;
-    border-bottom: 1px solid #3a3a3a;
+    /* border-bottom: 1px solid #3a3a3a; */
+}
+.empty {
+    padding: 20px;
+}
+
+/* Scrollbar */
+
+/* width */
+::-webkit-scrollbar {
+    width: 3px;
+    position: absolute;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #101010;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 15pt;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }

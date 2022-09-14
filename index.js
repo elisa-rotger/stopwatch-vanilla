@@ -16,12 +16,12 @@ stopButton.addEventListener('click', () => {
 
 lapButton.addEventListener('click', () => {
     if (isRunning) {
-        // TODO: if timer is running, record laps
         recordLap();
     } else {
         // RESET: clear interval, set everything to 0, keep clock turned off
         clearInterval(interval);
         [minutes, seconds, milliseconds] = [0, 0, 0];
+        [ms, s, min] = [0, 0, 0];
         laps = [];
         let lapsList = document.getElementById('laps-list');
         lapsList.replaceChildren();
@@ -31,10 +31,10 @@ lapButton.addEventListener('click', () => {
     }
 })
 
-// set up the display of the timer -> increase ms, s and m accordingly
+// TODO: Helper function empty() that empties an element. Should treat the lap list differently
+
 timerDisplay = () => {
     isRunning = true;
-    // change inner html and css class of buttons
     stopButton.innerHTML = 'Stop';
     stopButton.classList.replace('start', 'stop');
     lapButton.innerHTML = 'Lap';
@@ -54,25 +54,33 @@ timerDisplay = () => {
     s = seconds < 10 ? '0' + seconds : seconds;
     min = minutes < 10 ? '0' + minutes : minutes;
 
-    // add these to html
     timer.innerHTML = `${min}:${s}.${ms}`;
 }
 
 pauseButton = () => {
     clearInterval(interval);
     isRunning = false;
+
     stopButton.innerHTML = 'Start';
     stopButton.classList.replace('stop', 'start');
     lapButton.innerHTML = 'Reset';
 }
 
 recordLap = () => {
-    // calc the total of time in the lap
-    let totalTime = min*60*1000 + s*1000 + ms;
+    let totalTime = (minutes*60*1000) + (seconds*1000) + milliseconds;
     let value = `${min}:${s}.${ms}`;
 
-    // push obj with: id, value, total to laps array
-    laps.push({ id: laps.length, value: value, total: totalTime});
+    if (laps.length === 0) {
+        laps.push({ id: laps.length, value: value, total: totalTime });
+    } else {
+        let intervalLap = totalTime - laps[laps.length-1].total;
+        console.log(laps, intervalLap)
+        console.log(totalTime, typeof totalTime)
+        console.log(laps[laps.length-1].total, typeof laps[laps.length-1].total)
+        value = convertToValue(intervalLap);
+        laps.push({ id: laps.length, value: value, total: totalTime });
+    }
+
 
     let lap = document.createElement('li');
     lap.innerHTML = value;
@@ -82,11 +90,24 @@ recordLap = () => {
 
     let num = document.createElement('li');
     num.innerHTML = `Lap ${laps.length}`;
-    num.className = 'lap-num'
+    num.className = 'lap-num';
     let lapNum = document.getElementById('laps-number');
     lapNum.insertBefore(num, lapNum.firstChild);
 
     //TODO: Improve styling -> the border boxes for the list elements are already there BEFORE adding the laps, not added with them
 
     //TODO: Find the lap with highest / lowest value and change their color accordingly
+}
+
+convertToValue = (totalMs) => {
+    let minLap = Math.floor(totalMs / 60000);
+    let sLap = Math.floor((totalMs % 60000) / 1000);
+    let msLap = totalMs - (minLap * 60000) - (sLap * 1000);
+
+    console.log(minLap, sLap, msLap, totalMs)
+    msLap = msLap < 100 ? '0' + msLap : msLap;
+    sLap = sLap < 10 ? '0' + sLap : sLap;
+    minLap = minLap < 10 ? '0' + minLap : minLap;
+
+    return `${minLap}:${sLap}.${msLap}`;
 }
