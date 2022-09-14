@@ -20,6 +20,8 @@
     background-color: #101010;
 }
 
+/* Timer */
+
 .crontab {
     color: white;
     display: flex;
@@ -29,6 +31,8 @@
     font-weight: 100;
     padding-top: 65px;
 }
+
+/* Buttons */
 
 .buttons-container {
     padding: 0 10px;
@@ -74,4 +78,29 @@
     box-shadow: 0 0 0 1px #331314, inset 0 0 0 1px #101010;
     color: #f24034;
     color: rgba(242, 64, 52, 0.8)
+}
+
+/* Laps */
+
+.laps-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.laps {
+    list-style: none;
+    color: white;
+    padding: 10% 0;
+}
+.lap {
+    text-align: right;
+    padding: 5% 10%;
+    border-top: 1px solid #3a3a3a;
+    border-bottom: 1px solid #3a3a3a;
+}
+
+.lap-num {
+    padding: 5% 10%;
+    border-top: 1px solid #3a3a3a;
+    border-bottom: 1px solid #3a3a3a;
 }
