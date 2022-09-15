@@ -24,6 +24,9 @@ timerDisplay = () => {
     stopButton.classList.replace('start', 'stop');
     lapButton.innerHTML = 'Lap';
 
+    let runningLap = document.getElementById('laps-list').firstElementChild;
+    let runningNumber = document.getElementById('laps-number').firstElementChild;
+
     milliseconds += 10;
     if (milliseconds === 1000) {
         milliseconds = 0;
@@ -31,14 +34,23 @@ timerDisplay = () => {
         if (seconds === 60) {
             seconds = 0;
             minutes += 1;
-        }
+        };
     };
 
     ms = milliseconds < 100 ? '0' + milliseconds : milliseconds;
     s = seconds < 10 ? '0' + seconds : seconds;
     min = minutes < 10 ? '0' + minutes : minutes;
 
-    timer.innerHTML = `${min}:${s}.${ms.toString().slice(0, -1)}`;
+    let clock = `${min}:${s}.${ms.toString().slice(0, -1)}`;
+
+    runningLap.innerHTML = `${min}:${s}.${ms.toString().slice(0, -1)}`;
+    runningLap.classList.remove('empty');
+
+    runningNumber.innerHTML = `Lap ${laps.length+1}`;
+    runningNumber.classList.remove('empty');
+
+
+    timer.innerHTML = clock;
 }
 
 pauseButton = () => {
@@ -50,20 +62,38 @@ pauseButton = () => {
     lapButton.innerHTML = 'Reset';
 }
 
-recordLap = () => {
-    let totalTime = (minutes*60*1000) + (seconds*1000) + milliseconds;
-    let value = `${min}:${s}.${ms.toString().slice(0, -1)}`;
+recordLap = (shouldCreateLap) => {
 
-    if (laps.length === 0) {
-        laps.push({ id: laps.length, value: value, total: totalTime, interval: totalTime });
-    } else {
-        let intervalLap = totalTime - laps[laps.length-1].total;
-        value = convertToValue(intervalLap);
-        laps.push({ id: laps.length, value: value, total: totalTime, interval: intervalLap });
-    }
 
+    // let totalTime = (minutes*60*1000) + (seconds*1000) + milliseconds;
+    // let value = `${min}:${s}.${ms.toString().slice(0, -1)}`;
+
+    // if (laps.length === 0) {
+    //     laps.push({ id: laps.length, value: value, total: totalTime, interval: totalTime });
+    // } else {
+    //     let intervalLap = totalTime - laps[laps.length-1].total;
+    //     value = convertToValue(intervalLap);
+    //     laps.push({ id: laps.length, value: value, total: totalTime, interval: intervalLap });
+    // }
+
+
+
+    // let lastLapClasses = lapsList.lastElementChild.classList;
+    // if (lastLapClasses.contains('empty')) {
+    //     lapsList.removeChild(lapsList.lastElementChild);
+    //     lapNum.removeChild(lapNum.lastElementChild);
+    // };
+
+    // if (laps.length >= 3) {
+    //     let edgeLaps = findHighestLowest();
+    //     paintHighestLowest(edgeLaps[0], edgeLaps[1]);
+    // };
+
+}
+
+createLap = () => {
     let lap = document.createElement('li');
-    lap.innerHTML = value;
+    lap.innerHTML = `${min}:${s}.${ms.toString().slice(0, -1)}`;
     lap.className = 'lap';
     let lapsList = document.getElementById('laps-list');
     lapsList.insertBefore(lap, lapsList.firstChild);
@@ -74,17 +104,7 @@ recordLap = () => {
     let lapNum = document.getElementById('laps-number');
     lapNum.insertBefore(num, lapNum.firstChild);
 
-    let lastLapClasses = lapsList.lastElementChild.classList;
-    if (lastLapClasses.contains('empty')) {
-        lapsList.removeChild(lapsList.lastElementChild);
-        lapNum.removeChild(lapNum.lastElementChild);
-    };
-
-    if (laps.length >= 3) {
-        let edgeLaps = findHighestLowest();
-        paintHighestLowest(edgeLaps[0], edgeLaps[1]);
-    };
-
+    return [lapNum, lap];
 }
 
 convertToValue = (totalMs) => {
