@@ -84,8 +84,7 @@
 
 .laps-container {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 3%;
+    padding: 3% 3% 0 3%;
     overflow: hidden;
     overflow-y: auto;
     font-size: small;
@@ -93,30 +92,21 @@
 }
 
 .laps {
-    list-style: none;
     color: white;
-    padding: 10% 0 5% 0;
-}
-
-#laps-list li:last-child {
-    border-bottom: 1px solid #3a3a3a;
-}
-
-#laps-number li:last-child {
-    border-bottom: 1px solid #3a3a3a;
+    padding-top: 10%;
 }
 
 .lap {
-    padding: 7%;
+    padding: 3%;
     border-top: 1px solid #3a3a3a;
 }
 
-#laps-list li {
+#laps-list tr td:last-child {
     text-align: right;
 }
 
 .empty {
-    padding: 19px;
+    padding: 17px;
 }
 
 .highest {
