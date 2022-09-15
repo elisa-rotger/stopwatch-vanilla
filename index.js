@@ -55,11 +55,11 @@ recordLap = () => {
     let value = `${min}:${s}.${ms.toString().slice(0, -1)}`;
 
     if (laps.length === 0) {
-        laps.push({ id: laps.length, value: value, total: totalTime });
+        laps.push({ id: laps.length, value: value, total: totalTime, interval: totalTime });
     } else {
         let intervalLap = totalTime - laps[laps.length-1].total;
         value = convertToValue(intervalLap);
-        laps.push({ id: laps.length, value: value, total: totalTime });
+        laps.push({ id: laps.length, value: value, total: totalTime, interval: intervalLap });
     }
 
     let lap = document.createElement('li');
@@ -78,9 +78,13 @@ recordLap = () => {
     if (lastLapClasses.contains('empty')) {
         lapsList.removeChild(lapsList.lastElementChild);
         lapNum.removeChild(lapNum.lastElementChild);
-    }
+    };
 
-    //TODO: Find the lap with highest / lowest value and change their color accordingly
+    if (laps.length >= 3) {
+        let edgeLaps = findHighestLowest();
+        paintHighestLowest(edgeLaps[0], edgeLaps[1]);
+    };
+
 }
 
 convertToValue = (totalMs) => {
@@ -120,3 +124,40 @@ empty = () => {
 
     timer.innerHTML = '00:00.00';
 }
+
+findHighestLowest = () => {
+    let maxValue = Math.max(...laps.map(lap => lap.interval));
+    let maxLap = laps.find(lap => lap.interval === maxValue);
+    let minValue = Math.min(...laps.map(lap => lap.interval));
+    let minLap = laps.find(lap => lap.interval === minValue);
+
+    return [maxLap, minLap];
+}
+
+paintHighestLowest = (highest, lowest) => {
+    let valueLaps = document.querySelectorAll('#laps-list li');
+    let numLaps = document.querySelectorAll('#laps-number li');
+    let [highIdx, lowIdx] = [0, 0];
+
+    valueLaps.forEach((lap, index) => {
+        lap.classList.remove('highest', 'lowest');
+        if (lap.innerHTML === highest.value) {
+            lap.classList.add('highest');
+            highIdx = index;
+        } else if (lap.innerHTML === lowest.value) {
+            lap.classList.add('lowest');
+            lowIdx = index;
+        }
+    });
+
+    numLaps.forEach(lap => lap.classList.remove('highest', 'lowest'));
+    numLaps[highIdx].classList.add('highest');
+    numLaps[lowIdx].classList.add('lowest');
+}
+
+// TODO: Find way of current lap being on par with the timer
+
+// TODO: Style better the scrollbar -> it sould have some separation to the edge
+// of the page, and disappear when not being used for a couple of seconds
+
+// TODO: Build some defenses for when the highest or lowest lap is duplicated

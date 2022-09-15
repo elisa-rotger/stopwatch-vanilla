@@ -70,14 +70,14 @@
     background-color: #172e1c;
     box-shadow: 0 0 0 1px #172e1c, inset 0 0 0 1px #101010;
     color: #50d963;
-    color: rgba(80, 217, 99, 0.8)
+    color: rgba(80, 217, 99, 0.8);
 }
 
 .stop {
     background-color: #331314;
     box-shadow: 0 0 0 1px #331314, inset 0 0 0 1px #101010;
     color: #f24034;
-    color: rgba(242, 64, 52, 0.8)
+    color: rgba(242, 64, 52, 0.8);
 }
 
 /* Laps */
@@ -117,6 +117,16 @@
 
 .empty {
     padding: 19px;
+}
+
+.highest {
+    color: #f24034;
+    color: rgba(242, 64, 52, 0.8);
+}
+
+.lowest {
+    color: #50d963;
+    color: rgba(80, 217, 99, 0.8);
 }
 
 /* Scrollbar */
