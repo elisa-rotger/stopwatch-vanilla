@@ -1,5 +1,8 @@
 let [minutes, seconds, milliseconds] = [0, 0, 0];
-let [interval, ms, s, min] = [null, 0, 0, 0];
+let [ms, s, min] = [0, 0, 0];
+let [lapMinutes, lapSeconds, lapMilliseconds] = [0, 0, 0];
+let [lapMs, lapSec, lapMin] = [0, 0, 0];
+let interval = null;
 let isRunning = false;
 let laps = new Array();
 
@@ -23,6 +26,7 @@ timerDisplay = () => {
     stopButton.innerHTML = 'Stop';
     stopButton.classList.replace('start', 'stop');
     lapButton.innerHTML = 'Lap';
+    let lapClock;
 
     let runningLap = document.getElementById('laps-list').firstElementChild;
     let runningNumber = document.getElementById('laps-number').firstElementChild;
@@ -41,14 +45,18 @@ timerDisplay = () => {
     s = seconds < 10 ? '0' + seconds : seconds;
     min = minutes < 10 ? '0' + minutes : minutes;
 
+    if (laps.length) {
+        [lapMinutes, lapSeconds, lapMilliseconds] = [0, 0, 0];
+        [lapMin, lapSec, lapMs] = [0, 0, 0];
+    }
+
     let clock = `${min}:${s}.${ms.toString().slice(0, -1)}`;
 
-    runningLap.innerHTML = `${min}:${s}.${ms.toString().slice(0, -1)}`;
+    runningLap.innerHTML = lapClock ? lapClock : clock;
     runningLap.classList.remove('empty');
 
     runningNumber.innerHTML = `Lap ${laps.length+1}`;
     runningNumber.classList.remove('empty');
-
 
     timer.innerHTML = clock;
 }
@@ -62,21 +70,30 @@ pauseButton = () => {
     lapButton.innerHTML = 'Reset';
 }
 
-recordLap = (shouldCreateLap) => {
+recordLap = () => {
 
+    let totalTime = (minutes*60*1000) + (seconds*1000) + milliseconds;
+    let value = `${min}:${s}.${ms.toString().slice(0, -1)}`;
 
-    // let totalTime = (minutes*60*1000) + (seconds*1000) + milliseconds;
-    // let value = `${min}:${s}.${ms.toString().slice(0, -1)}`;
+    if (laps.length === 0) {
+        laps.push({ 
+            value: value, 
+            total: totalTime,
+            interval: totalTime 
+        });
+        createLap();
+    } else {
+        let intervalLap = totalTime - laps[laps.length-1].total;
+        value = convertToValue(intervalLap);
+        laps.push({ 
+            value: value, 
+            total: totalTime,
+            interval: intervalLap 
+        });
+        createLap();
+    }
 
-    // if (laps.length === 0) {
-    //     laps.push({ id: laps.length, value: value, total: totalTime, interval: totalTime });
-    // } else {
-    //     let intervalLap = totalTime - laps[laps.length-1].total;
-    //     value = convertToValue(intervalLap);
-    //     laps.push({ id: laps.length, value: value, total: totalTime, interval: intervalLap });
-    // }
-
-
+    console.log(laps)
 
     // let lastLapClasses = lapsList.lastElementChild.classList;
     // if (lastLapClasses.contains('empty')) {
@@ -93,18 +110,16 @@ recordLap = (shouldCreateLap) => {
 
 createLap = () => {
     let lap = document.createElement('li');
-    lap.innerHTML = `${min}:${s}.${ms.toString().slice(0, -1)}`;
+    lap.innerHTML = `00:00.0`;
     lap.className = 'lap';
     let lapsList = document.getElementById('laps-list');
     lapsList.insertBefore(lap, lapsList.firstChild);
 
     let num = document.createElement('li');
-    num.innerHTML = `Lap ${laps.length}`;
+    num.innerHTML = `Lap ${laps.length+1}`;
     num.className = 'lap';
     let lapNum = document.getElementById('laps-number');
     lapNum.insertBefore(num, lapNum.firstChild);
-
-    return [lapNum, lap];
 }
 
 convertToValue = (totalMs) => {
