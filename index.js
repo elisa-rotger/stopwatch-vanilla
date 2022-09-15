@@ -1,6 +1,6 @@
 let [minutes, seconds, milliseconds] = [0, 0, 0];
 let [ms, s, min] = [0, 0, 0];
-let [lapMinutes, lapSeconds, lapMilliseconds] = [0, 0, 0];
+let [lapMilliseconds, lapSeconds, lapMinutes] = [0, 0, 0];
 let [lapMs, lapSec, lapMin] = [0, 0, 0];
 let interval = null;
 let isRunning = false;
@@ -9,6 +9,8 @@ let laps = new Array();
 let timer = document.getElementById('timer');
 let stopButton = document.getElementById('start-stop');
 let lapButton = document.getElementById('lap-reset');
+let lapsList = document.getElementById('laps-list');
+let lapNum = document.getElementById('laps-number');
 
 stopButton.innerHTML = 'Start';
 lapButton.innerHTML = 'Reset';
@@ -26,11 +28,11 @@ timerDisplay = () => {
     stopButton.innerHTML = 'Stop';
     stopButton.classList.replace('start', 'stop');
     lapButton.innerHTML = 'Lap';
-    let lapClock;
 
     let runningLap = document.getElementById('laps-list').firstElementChild;
     let runningNumber = document.getElementById('laps-number').firstElementChild;
 
+    // TODO: Refactor this
     milliseconds += 10;
     if (milliseconds === 1000) {
         milliseconds = 0;
@@ -41,18 +43,30 @@ timerDisplay = () => {
         };
     };
 
+    lapMilliseconds += 10;
+    if (lapMilliseconds === 1000) {
+        lapMilliseconds = 0;
+        lapSeconds += 1;
+        if (lapSeconds === 60) {
+            lapSeconds = 0;
+            lapMinutes += 1;
+        };
+    };
+
     ms = milliseconds < 100 ? '0' + milliseconds : milliseconds;
     s = seconds < 10 ? '0' + seconds : seconds;
     min = minutes < 10 ? '0' + minutes : minutes;
 
-    if (laps.length) {
-        [lapMinutes, lapSeconds, lapMilliseconds] = [0, 0, 0];
-        [lapMin, lapSec, lapMs] = [0, 0, 0];
-    }
+    lapMs = lapMilliseconds < 100 ? '0' + lapMilliseconds : lapMilliseconds;
+    lapSec = lapSeconds < 10 ? '0' + lapSeconds : lapSeconds;
+    lapMin = lapMinutes < 10 ? '0' + lapMinutes : lapMinutes;
+
+    /* */ 
 
     let clock = `${min}:${s}.${ms.toString().slice(0, -1)}`;
+    let lapClock = `${lapMin}:${lapSec}.${lapMs.toString().slice(0, -1)}`;
 
-    runningLap.innerHTML = lapClock ? lapClock : clock;
+    runningLap.innerHTML = lapClock;
     runningLap.classList.remove('empty');
 
     runningNumber.innerHTML = `Lap ${laps.length+1}`;
@@ -71,6 +85,9 @@ pauseButton = () => {
 }
 
 recordLap = () => {
+
+    [lapMilliseconds, lapSeconds, lapMinutes] = [0, 0, 0];
+    [lapMs, lapSec, lapMin] = [0, 0, 0];
 
     let totalTime = (minutes*60*1000) + (seconds*1000) + milliseconds;
     let value = `${min}:${s}.${ms.toString().slice(0, -1)}`;
@@ -93,18 +110,17 @@ recordLap = () => {
         createLap();
     }
 
-    console.log(laps)
+    let lastLapClasses = lapsList.lastElementChild.classList;
 
-    // let lastLapClasses = lapsList.lastElementChild.classList;
-    // if (lastLapClasses.contains('empty')) {
-    //     lapsList.removeChild(lapsList.lastElementChild);
-    //     lapNum.removeChild(lapNum.lastElementChild);
-    // };
+    if (lastLapClasses.contains('empty')) {
+        lapsList.removeChild(lapsList.lastElementChild);
+        lapNum.removeChild(lapNum.lastElementChild);
+    };
 
-    // if (laps.length >= 3) {
-    //     let edgeLaps = findHighestLowest();
-    //     paintHighestLowest(edgeLaps[0], edgeLaps[1]);
-    // };
+    if (laps.length >= 3) {
+        let edgeLaps = findHighestLowest();
+        paintHighestLowest(edgeLaps[0], edgeLaps[1]);
+    };
 
 }
 
@@ -112,13 +128,11 @@ createLap = () => {
     let lap = document.createElement('li');
     lap.innerHTML = `00:00.0`;
     lap.className = 'lap';
-    let lapsList = document.getElementById('laps-list');
     lapsList.insertBefore(lap, lapsList.firstChild);
 
     let num = document.createElement('li');
     num.innerHTML = `Lap ${laps.length+1}`;
     num.className = 'lap';
-    let lapNum = document.getElementById('laps-number');
     lapNum.insertBefore(num, lapNum.firstChild);
 }
 
@@ -137,6 +151,8 @@ convertToValue = (totalMs) => {
 empty = () => {
     [minutes, seconds, milliseconds] = [0, 0, 0];
     [ms, s, min] = [0, 0, 0];
+    [lapMilliseconds, lapSeconds, lapMinutes] = [0, 0, 0];
+    [lapMs, lapSec, lapMin] = [0, 0, 0];
     laps = [];
 
     let lapNum = document.getElementById('laps-number');
@@ -189,8 +205,6 @@ paintHighestLowest = (highest, lowest) => {
     numLaps[highIdx].classList.add('highest');
     numLaps[lowIdx].classList.add('lowest');
 }
-
-// TODO: Find way of current lap being on par with the timer
 
 // TODO: Style better the scrollbar -> it sould have some separation to the edge
 // of the page, and disappear when not being used for a couple of seconds
