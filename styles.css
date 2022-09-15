@@ -15,7 +15,7 @@
     top: 0;
     bottom: 0;
     display: grid;
-    grid-template-rows: 310px 100px 320px;
+    grid-template-rows: 310px 100px 260px;
     background-color: #101010;
 }
 
@@ -55,7 +55,7 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 200;
+    font-size:0.8em;
     font-weight: 350;
 }
 
@@ -95,22 +95,28 @@
 .laps {
     list-style: none;
     color: white;
-    padding: 10% 0;
-}
-.lap {
-    text-align: right;
-    padding: 7%;
-    border-top: 1px solid #3a3a3a;
-    /* border-bottom: 1px solid #3a3a3a; */
+    padding: 10% 0 5% 0;
 }
 
-.lap-num {
+#laps-list li:last-child {
+    border-bottom: 1px solid #3a3a3a;
+}
+
+#laps-number li:last-child {
+    border-bottom: 1px solid #3a3a3a;
+}
+
+.lap {
     padding: 7%;
     border-top: 1px solid #3a3a3a;
-    /* border-bottom: 1px solid #3a3a3a; */
 }
+
+#laps-list li {
+    text-align: right;
+}
+
 .empty {
-    padding: 20px;
+    padding: 19px;
 }
 
 /* Scrollbar */
@@ -135,4 +141,11 @@
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
+}
+
+/* Footer */
+
+footer {
+    border-top: 1px solid #3a3a3a;
+    background-color: #111111;
 }

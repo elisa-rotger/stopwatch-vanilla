@@ -1,10 +1,11 @@
 let [minutes, seconds, milliseconds] = [0, 0, 0];
+let [interval, ms, s, min] = [null, 0, 0, 0];
+let isRunning = false;
+let laps = new Array();
+
 let timer = document.getElementById('timer');
 let stopButton = document.getElementById('start-stop');
 let lapButton = document.getElementById('lap-reset');
-let isRunning = false;
-let [interval, ms, s, min] = [null, 0, 0, 0];
-let laps = new Array();
 
 stopButton.innerHTML = 'Start';
 lapButton.innerHTML = 'Reset';
@@ -14,14 +15,8 @@ stopButton.addEventListener('click', () => {
 });
 
 lapButton.addEventListener('click', () => {
-    if (isRunning) {
-        recordLap();
-    } else {
-        // RESET: clear interval, set everything to 0, keep clock turned off
-        clearInterval(interval);
-        empty();
-    }
-})
+    isRunning ? (recordLap()) : (clearInterval(interval), empty());
+});
 
 timerDisplay = () => {
     isRunning = true;
@@ -37,7 +32,7 @@ timerDisplay = () => {
             seconds = 0;
             minutes += 1;
         }
-    }
+    };
 
     ms = milliseconds < 100 ? '0' + milliseconds : milliseconds;
     s = seconds < 10 ? '0' + seconds : seconds;
@@ -57,7 +52,7 @@ pauseButton = () => {
 
 recordLap = () => {
     let totalTime = (minutes*60*1000) + (seconds*1000) + milliseconds;
-    let value = `${min}:${s}.${ms}`;
+    let value = `${min}:${s}.${ms.toString().slice(0, -1)}`;
 
     if (laps.length === 0) {
         laps.push({ id: laps.length, value: value, total: totalTime });
@@ -67,7 +62,6 @@ recordLap = () => {
         laps.push({ id: laps.length, value: value, total: totalTime });
     }
 
-
     let lap = document.createElement('li');
     lap.innerHTML = value;
     lap.className = 'lap';
@@ -76,7 +70,7 @@ recordLap = () => {
 
     let num = document.createElement('li');
     num.innerHTML = `Lap ${laps.length}`;
-    num.className = 'lap-num';
+    num.className = 'lap';
     let lapNum = document.getElementById('laps-number');
     lapNum.insertBefore(num, lapNum.firstChild);
 
@@ -112,16 +106,15 @@ empty = () => {
     let lapsList = document.getElementById('laps-list');
     lapsList.replaceChildren();
 
-    for (let i = 1; i <= 6; i++) {
-        const classesValue = ['lap', 'empty'];
-        const classesNumber = ['lap-num', 'empty'];
+    for (let i = 1; i <= 5; i++) {
+        const classes = ['lap', 'empty'];
 
         let defaultLapVal = document.createElement('li');
-        defaultLapVal.classList.add(...classesValue);
+        defaultLapVal.classList.add(...classes);
         lapsList.appendChild(defaultLapVal);
 
         let defaultLapNum = document.createElement('li');
-        defaultLapNum.classList.add(...classesNumber);
+        defaultLapNum.classList.add(...classes);
         lapNum.appendChild(defaultLapNum);
     }
 
