@@ -113,13 +113,13 @@
     font-size: small;
     margin-right: 2px;
     overflow: auto;
-    border-top: 1px solid #292929;
 }
 
 .lap-table {
     color: white;
     /* padding-top: 10%; */
     width: calc(320px - 9px);
+    border-top: 1px solid #292929;
 }
 
 #lap-list tr td {
