@@ -52,7 +52,9 @@ startTimer = () => {
         };
     };
 
-    ms = milliseconds < 100 ? '0' + milliseconds : milliseconds;
+    ms = milliseconds === 0 ? '000' 
+        : milliseconds < 100 ? '0' + milliseconds
+        : milliseconds;
     s = seconds < 10 ? '0' + seconds : seconds;
     min = minutes < 10 ? '0' + minutes : minutes;
 
@@ -194,7 +196,5 @@ paintHighestLowest = (highest, lowest) => {
 // of the page, and disappear when not being used for a couple of seconds
 
 // TODO: Review styling
-
-// TODO: Find a way to make the numbers not so jumpy
 
 // TODO: Lap table gets slightly smaller when scrollbar appears
