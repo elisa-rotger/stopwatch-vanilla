@@ -148,7 +148,7 @@ empty = () => {
 
     lapList.replaceChildren();
 
-    for (let i = 1; i <= 5; i++) {
+    for (let i = 1; i <= 6; i++) {
         const classes = ['lap', 'empty'];
 
         const defaultLap = document.createElement('tr');
