@@ -7,31 +7,31 @@ let isRunning = false;
 let laps = new Array();
 
 const timer = document.getElementById('timer');
-const stopButton = document.getElementById('start-stop');
-const lapButton = document.getElementById('lap-reset');
+const startStopButton = document.getElementById('start-stop');
+const lapResetButton = document.getElementById('lap-reset');
 
-const lapsList = document.getElementById('laps-list')
+const lapList = document.getElementById('lap-list')
 
-stopButton.innerHTML = 'Start';
-lapButton.innerHTML = 'Reset';
+startStopButton.innerHTML = 'Start';
+lapResetButton.innerHTML = 'Reset';
 
-stopButton.addEventListener('click', () => {
+startStopButton.addEventListener('click', () => {
     isRunning ? (pauseTimer()) : (interval = setInterval(startTimer, 10));
 });
 
-lapButton.addEventListener('click', () => {
+lapResetButton.addEventListener('click', () => {
     isRunning ? (recordLap()) : (clearInterval(interval), empty());
 });
 
 startTimer = () => {
     isRunning = true;
-    stopButton.innerHTML = 'Stop';
-    stopButton.classList.replace('start', 'stop');
-    lapButton.innerHTML = 'Lap';
+    startStopButton.innerHTML = 'Stop';
+    startStopButton.classList.replace('start', 'stop');
+    lapResetButton.innerHTML = 'Lap';
 
-    const runningLap = lapsList.firstElementChild;
+    const runningLap = lapList.firstElementChild;
 
-    // TODO: Refactor this
+    // TODO: Refactor this ?
     milliseconds += 10;
     if (milliseconds === 1000) {
         milliseconds = 0;
@@ -77,9 +77,9 @@ pauseTimer = () => {
     clearInterval(interval);
     isRunning = false;
 
-    stopButton.innerHTML = 'Start';
-    stopButton.classList.replace('stop', 'start');
-    lapButton.innerHTML = 'Reset';
+    startStopButton.innerHTML = 'Start';
+    startStopButton.classList.replace('stop', 'start');
+    lapResetButton.innerHTML = 'Reset';
 }
 
 recordLap = () => {
@@ -90,26 +90,18 @@ recordLap = () => {
     let totalTime = (minutes*60*1000) + (seconds*1000) + milliseconds;
     let value = `${min}:${s}.${ms.toString().slice(0, -1)}`;
 
-    if (laps.length === 0) {
-        laps.push({ 
-            value: value, 
-            total: totalTime,
-            interval: totalTime 
-        });
+    if (laps.length === 0) { 
+        laps.push({ value: value, total: totalTime, interval: totalTime });
         createLap();
     } else {
         let intervalLap = totalTime - laps[laps.length-1].total;
         value = convertToValue(intervalLap);
-        laps.push({ 
-            value: value, 
-            total: totalTime,
-            interval: intervalLap 
-        });
+        laps.push({ value: value, total: totalTime, interval: intervalLap });
         createLap();
     }
 
-    let lastLapClasses = lapsList.lastElementChild.firstElementChild.classList;
-    lastLapClasses.contains('empty') ? lapsList.removeChild(lapsList.lastElementChild) : null;
+    let lastLapClasses = lapList.lastElementChild.firstElementChild.classList;
+    lastLapClasses.contains('empty') ? lapList.removeChild(lapList.lastElementChild) : null;
 
     if (laps.length >= 3) {
         let edgeLaps = findHighestLowest();
@@ -130,7 +122,7 @@ createLap = () => {
 
     lap.appendChild(lapNumber);
     lap.appendChild(lapTimer);
-    lapsList.insertBefore(lap, lapsList.firstChild);
+    lapList.insertBefore(lap, lapList.firstChild);
 }
 
 convertToValue = (totalMs) => {
@@ -146,13 +138,13 @@ convertToValue = (totalMs) => {
 }
 
 empty = () => {
-    [minutes, seconds, milliseconds] = [0, 0, 0];
+    [milliseconds, seconds, minutes] = [0, 0, 0];
     [ms, s, min] = [0, 0, 0];
     [lapMilliseconds, lapSeconds, lapMinutes] = [0, 0, 0];
     [lapMs, lapSec, lapMin] = [0, 0, 0];
     laps = [];
 
-    lapsList.replaceChildren();
+    lapList.replaceChildren();
 
     for (let i = 1; i <= 5; i++) {
         const classes = ['lap', 'empty'];
@@ -167,7 +159,7 @@ empty = () => {
         defaultLap.appendChild(defaultLapVal);
         defaultLap.appendChild(defaultLapNum);
 
-        lapsList.appendChild(defaultLap);
+        lapList.appendChild(defaultLap);
     }
 
     timer.innerHTML = '00:00.00';
@@ -183,9 +175,8 @@ findHighestLowest = () => {
 }
 
 paintHighestLowest = (highest, lowest) => {
-    const valueLaps = document.querySelectorAll('#laps-list tr td');
+    const valueLaps = document.querySelectorAll('#lap-list tr td');
     let [highIdx, lowIdx] = [0, 0];
-    console.log(valueLaps)
 
     valueLaps.forEach((lap, index) => {
         lap.classList.remove('highest', 'lowest');
@@ -205,3 +196,5 @@ paintHighestLowest = (highest, lowest) => {
 // TODO: Review styling
 
 // TODO: Find a way to make the numbers not so jumpy
+
+// TODO: Lap table gets slightly smaller when scrollbar appears
