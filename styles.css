@@ -80,12 +80,37 @@
     color: rgba(242, 64, 52, 0.8);
 }
 
+/* Lil buttons in the middle */
+
+.middle-buttons {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    justify-content: center;
+    align-items: center;
+}
+
+.circle {
+    width: 7px;
+    height: 7px;
+    background-color: white;
+    border-radius: 50%;
+}
+
+.white {
+    background-color: white;
+}
+
+.grey {
+    background-color: #3e3e3e;
+}
+
 /* Laps */
 
 .laps-container {
     display: grid;
     padding: 3% 3% 0 3%;
-    overflow: hidden;
+    overflow: auto;
     overflow-y: auto;
     font-size: small;
     margin-right: 2px;
@@ -96,13 +121,16 @@
     padding-top: 10%;
 }
 
-.lap {
-    padding: 3%;
-    border-top: 1px solid #3a3a3a;
+#laps-list tr td {
+    height: 40px;
 }
 
 #laps-list tr td:last-child {
     text-align: right;
+}
+
+.lap {
+    border-top: 1px solid #3a3a3a;
 }
 
 .empty {

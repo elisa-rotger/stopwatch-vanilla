@@ -202,8 +202,6 @@ paintHighestLowest = (highest, lowest) => {
 // TODO: Style better the scrollbar -> it sould have some separation to the edge
 // of the page, and disappear when not being used for a couple of seconds
 
-// TODO: Add lil buttons in the middle
-
 // TODO: Review styling
 
 // TODO: Find a way to make the numbers not so jumpy
