@@ -2,11 +2,12 @@
     margin: 0;
     box-sizing: border-box;
     /* font-family: 'HelveticaNeue-UltraLight', cursive; */
-    font-family: -apple-system, BlinkMacSystemFont, sans-serif;;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    /* outline: 1px solid red !important; */
 }
 
 .inner {
-    width: 340px;
+    width: 340px; /* 0010 */
     height: 750px;
     margin: auto;
     position: absolute;
@@ -38,7 +39,6 @@
     padding: 0 10px;
     display: grid;
     grid-template-columns: 100px 120px 100px;
-    /* border-bottom: 1px solid #3a3a3a; */
 }
 
 .button-wrapper {
@@ -113,21 +113,21 @@
     font-size: small;
     margin-right: 2px;
     overflow: auto;
+    overflow-y: auto;
 }
 
 .lap-table {
     color: white;
-    /* padding-top: 10%; */
     width: calc(320px - 9px);
     border-top: 1px solid #292929;
 }
 
 #lap-list tr td {
-    height: 35px;
+    height: 35px; /* 0102 */
 }
 
 #lap-list tr td:last-child {
-    text-align: right;
+    text-align: right;  /* 0112 */
 }
 
 .lap {
@@ -147,30 +147,31 @@
 /* Scrollbar */
 
 /* width */
-::-webkit-scrollbar {
-    width: 3px;
+.lap-container::-webkit-scrollbar {
+    width: 3px;  /* 0001 ? */
     position: absolute;
 }
 
 /* Track */
-::-webkit-scrollbar-track {
+.lap-container::-webkit-scrollbar-track {
     background: #101010;
 }
 
 /* Handle */
-::-webkit-scrollbar-thumb {
-    background: #888;
+.lap-container::-webkit-scrollbar-thumb {
+    /* background: rgb(136, 136, 136, 0); */
+    background: rgb(136, 136, 136);
     border-radius: 15pt;
 }
 
 /* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-    background: #555;
+.lap-container::-webkit-scrollbar-thumb:hover {
+    background: rgb(85, 85, 85);
 }
 
 /* Footer */
 
 footer {
-    border-top: 1px solid #3a3a3a;
+    border-top: 1px solid #3a3a3a;  /* 0001 */
     background-color: #211e1e;
 }
