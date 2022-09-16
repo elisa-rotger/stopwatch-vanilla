@@ -1,8 +1,9 @@
-let milliseconds = 0;
-let lapMilliseconds = 0;
 let interval = null;
 let isRunning = false;
 let laps = new Array();
+
+let [previousTimeTimer, passedTimeTimer] = [null, null];
+let [previousTimeLap, passedTimeLap] = [null, null];
 
 const $timer = document.getElementById('timer');
 const $startStopButton = document.getElementById('start-stop');
@@ -20,7 +21,6 @@ $lapResetButton.onclick = () => {
     isRunning ? (recordLap()) : (clearInterval(interval), resetTimer());
 };
 
-//TODO: Review setInterval into how it calculates the time (delay?)
 startTimer = () => {
     isRunning = true;
     $startStopButton.innerText = 'Stop';
@@ -29,11 +29,21 @@ startTimer = () => {
 
     const runningLap = $lapList.firstElementChild;
 
-    milliseconds += 10;
-    lapMilliseconds += 10;
+    // TODO: Refactor into helper function
+    // Time calc for clock
+    previousTimeTimer = previousTimeTimer ? previousTimeTimer : Date.now();
 
-    let clock = convertToValue(milliseconds);
-    let lapClock = convertToValue(lapMilliseconds);
+    passedTimeTimer += Date.now() - previousTimeTimer;
+    previousTimeTimer = Date.now();
+
+    // Time calc for lap
+    previousTimeLap = previousTimeLap ? previousTimeLap : Date.now();
+
+    passedTimeLap += Date.now() - previousTimeLap;
+    previousTimeLap = Date.now();
+
+    let clock = convertToValue(passedTimeTimer);
+    let lapClock = convertToValue(passedTimeLap);
 
     runningLap.lastElementChild.innerText = lapClock;
     runningLap.lastElementChild.classList.remove('empty');
@@ -54,20 +64,17 @@ pauseTimer = () => {
 
 recordLap = () => {
 
-    lapMilliseconds = 0;
-
     if (laps.length === 0) { 
         laps.push({ 
-            value: convertToValue(milliseconds), 
-            total: milliseconds, 
-            interval: milliseconds 
+            value: convertToValue(passedTimeTimer), 
+            total: passedTimeTimer, 
+            interval: passedTimeTimer 
         });
     } else {
-        let intervalLap = milliseconds - laps[laps.length-1].total;
         laps.push({ 
-            value: convertToValue(intervalLap), 
-            total: milliseconds, 
-            interval: intervalLap 
+            value: convertToValue(passedTimeLap), 
+            total: passedTimeTimer, 
+            interval: passedTimeLap 
         });
     };
 
@@ -81,6 +88,7 @@ recordLap = () => {
         paintHighestLowest(edgeLaps[0], edgeLaps[1]);
     };
 
+    [previousTimeLap, passedTimeLap] = [null, null];
 }
 
 createLap = () => {
@@ -114,8 +122,8 @@ convertToValue = (totalMs) => {
 }
 
 resetTimer = () => {
-    milliseconds = 0;
-    lapMilliseconds = 0;
+    [previousTimeTimer, passedTimeTimer] = [null, null];
+    [previousTimeLap, passedTimeLap] = [null, null];
     laps = [];
 
     $lapList.replaceChildren();
@@ -130,10 +138,10 @@ resetTimer = () => {
         $defaultLapVal.classList.add(...classes);
         $defaultLapNum.classList.add(...classes);
 
-        $defaultLap.appendChild(defaultLapVal);
-        $defaultLap.appendChild(defaultLapNum);
+        $defaultLap.appendChild($defaultLapVal);
+        $defaultLap.appendChild($defaultLapNum);
 
-        $lapList.appendChild(defaultLap);
+        $lapList.appendChild($defaultLap);
     }
 
     $timer.innerText = '00:00.00';
