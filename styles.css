@@ -109,17 +109,16 @@
 /* Laps */
 
 .lap-container {
-    display: grid;
     padding: 3% 3% 0 3%;
-    overflow: auto;
-    overflow-y: auto;
     font-size: small;
     margin-right: 2px;
+    overflow: auto;
 }
 
 .lap-table {
     color: white;
     padding-top: 10%;
+    width: calc(320px - 9px);
 }
 
 #lap-list tr td {

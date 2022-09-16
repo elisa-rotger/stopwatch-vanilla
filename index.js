@@ -196,5 +196,3 @@ paintHighestLowest = (highest, lowest) => {
 // of the page, and disappear when not being used for a couple of seconds
 
 // TODO: Review styling
-
-// TODO: Lap table gets slightly smaller when scrollbar appears
