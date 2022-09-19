@@ -116,11 +116,7 @@
     overflow-y: auto;
     color: rgb(136, 136, 136, 0);
     scrollbar-gutter: both-edges stable;
-    /* transition: color .5 ease; */
-    -webkit-transition: color .5 ease;
-        -moz-transition: color .5 ease;
-            -o-transition: color .5 ease;
-                transition: color .5 ease;
+    transition: color 0.5s ease;
     /* Firefox support */
     scrollbar-color: rgb(136, 136, 136, 1) #101010;
     scrollbar-width: thin;
