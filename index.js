@@ -49,7 +49,7 @@ const startTimer = () => {
     runningLap.lastElementChild.innerText = lapClock;
     runningLap.classList.remove('empty');
     runningLap.firstElementChild.innerText = `Lap ${laps.length+1}`;
-    runningLap.id = hasId(runningLap) ? runningLap.id : `lap-1`;
+    runningLap.id = runningLap.hasAttribute('id') ? runningLap.id : `lap-1`;
 
     $timer.innerText = clock;
     isRunning = true;
@@ -164,25 +164,14 @@ const findHighestLowest = () => {
 const paintHighestLowest = (highest, lowest) => {
     
     const $valueLapsTr = document.querySelectorAll('#lap-list tr');
-    
     $valueLapsTr.forEach(lap => {
         lap.classList.remove('highest', 'lowest');
-        if (lap.lastElementChild.innerText === highest.value) {
-            lap.classList.add('highest');
-        } else if (lap.lastElementChild.innerText === lowest.value) {
-            lap.classList.add('lowest');
-        }
+        lap.id === `lap-${highest.id}` ? lap.classList.add('highest') : null;
+        lap.id === `lap-${lowest.id}` ? lap.classList.add('lowest') : null;
     });
 }
 
-const hasId = (element) => {
-    return element.hasAttribute('id');
-}
-
-// TODO: Style better the scrollbar -> it sould have some separation to the edge
-// of the page, and disappear when not being used for a couple of seconds
-
-// TODO: Review styling
+// TODO: Style better the scrollbar -> it should disappear when not being used for a couple of seconds
 
 // Testing
 $lapList.addEventListener('wheel', () => {
