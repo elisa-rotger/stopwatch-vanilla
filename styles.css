@@ -120,6 +120,7 @@
     color: white;
     width: calc(320px - 9px);
     border-top: 1px solid #292929;
+    border-collapse: collapse; 
 }
 
 #lap-list tr td {
@@ -132,6 +133,7 @@
 
 .lap {
     border-bottom: 1px solid #292929;
+    font-variant-numeric: tabular-nums;
 }
 
 .highest {

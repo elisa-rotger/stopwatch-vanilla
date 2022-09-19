@@ -21,8 +21,7 @@ $lapResetButton.onclick = () => {
     isRunning ? (recordLap()) : (clearInterval(interval), resetTimer());
 };
 
-startTimer = () => {
-    isRunning = true;
+const startTimer = () => {
     $startStopButton.innerText = 'Stop';
     $startStopButton.classList.replace('start', 'stop');
     $lapResetButton.innerText = 'Lap';
@@ -32,12 +31,14 @@ startTimer = () => {
     // TODO: Refactor into helper function
     // Time calc for clock
     previousTimeTimer = previousTimeTimer ? previousTimeTimer : Date.now();
+    previousTimeTimer = isRunning ? previousTimeTimer : Date.now();
 
     passedTimeTimer += Date.now() - previousTimeTimer;
     previousTimeTimer = Date.now();
 
     // Time calc for lap
     previousTimeLap = previousTimeLap ? previousTimeLap : Date.now();
+    previousTimeLap = isRunning ? previousTimeLap : Date.now();
 
     passedTimeLap += Date.now() - previousTimeLap;
     previousTimeLap = Date.now();
@@ -46,14 +47,15 @@ startTimer = () => {
     let lapClock = convertToValue(passedTimeLap);
 
     runningLap.lastElementChild.innerText = lapClock;
-    runningLap.lastElementChild.classList.remove('empty');
+    runningLap.classList.remove('empty');
     runningLap.firstElementChild.innerText = `Lap ${laps.length+1}`;
-    runningLap.firstElementChild.classList.remove('empty');
+    runningLap.id = hasId(runningLap) ? runningLap.id : `lap-1`;
 
     $timer.innerText = clock;
+    isRunning = true;
 }
 
-pauseTimer = () => {
+const pauseTimer = () => {
     clearInterval(interval);
     isRunning = false;
 
@@ -62,16 +64,18 @@ pauseTimer = () => {
     $lapResetButton.innerText = 'Reset';
 }
 
-recordLap = () => {
+const recordLap = () => {
 
     if (laps.length === 0) { 
         laps.push({ 
+            id: laps.length+1,
             value: convertToValue(passedTimeTimer), 
             total: passedTimeTimer, 
             interval: passedTimeTimer 
         });
     } else {
         laps.push({ 
+            id: laps.length+1,
             value: convertToValue(passedTimeLap), 
             total: passedTimeTimer, 
             interval: passedTimeLap 
@@ -80,7 +84,7 @@ recordLap = () => {
 
     createLap();
 
-    let lastLapClasses = $lapList.lastElementChild.firstElementChild.classList;
+    let lastLapClasses = $lapList.lastElementChild.classList;
     lastLapClasses.contains('empty') ? $lapList.removeChild($lapList.lastElementChild) : null;
 
     if (laps.length >= 3) {
@@ -91,37 +95,39 @@ recordLap = () => {
     [previousTimeLap, passedTimeLap] = [null, null];
 }
 
-createLap = () => {
+const createLap = () => {
     const $lap = document.createElement('tr');
     const $lapNumber = document.createElement('td');
     const $lapTimer = document.createElement('td');
 
     $lapTimer.innerText = `00:00.0`;
     $lapNumber.innerText = `Lap ${laps.length+1}`;
-    $lapTimer.id = `${laps.length+1}`;
-    $lapNumber.id = `${laps.length+1}`;
-    $lapTimer.className = 'lap';
-    $lapNumber.className = 'lap';
+    $lap.id = `lap-${laps.length+1}`;
+    $lap.className = 'lap';
 
     $lap.appendChild($lapNumber);
     $lap.appendChild($lapTimer);
     $lapList.insertBefore($lap, $lapList.firstChild);
 }
 
-convertToValue = (totalMs) => {
+const convertToValue = (totalMs) => {
     let totalMinutes = Math.floor(totalMs / 60000);
     let totalSeconds = Math.floor((totalMs % 60000) / 1000);
     let totalMilliseconds = totalMs - (totalMinutes * 60000) - (totalSeconds * 1000);
 
-    // TODO: Look for built in JS to do this
-    totalMilliseconds = totalMilliseconds === 0 ? '000' : totalMilliseconds < 100 ? '0' + totalMilliseconds : totalMilliseconds;
-    totalSeconds = totalSeconds < 10 ? '0' + totalSeconds : totalSeconds;
-    totalMinutes = totalMinutes < 10 ? '0' + totalMinutes : totalMinutes;
+    totalMilliseconds = formatNumber(totalMilliseconds, 2, '0');
+    totalSeconds = formatNumber(totalSeconds, 2, '0');
+    totalMinutes = formatNumber(totalMinutes, 2, '0');
 
-    return `${totalMinutes}:${totalSeconds}.${totalMilliseconds.toString().slice(0, -1)}`;
+    return `${totalMinutes}:${totalSeconds}.${totalMilliseconds}`;
 }
 
-resetTimer = () => {
+const formatNumber = (num, length, character) => {
+    let baseFormat = new Array(1 + length).join(character);
+    return (baseFormat + num).slice(-baseFormat.length);
+}
+
+const resetTimer = () => {
     [previousTimeTimer, passedTimeTimer] = [null, null];
     [previousTimeLap, passedTimeLap] = [null, null];
     laps = [];
@@ -135,38 +141,42 @@ resetTimer = () => {
         const $defaultLapVal = document.createElement('td');
         const $defaultLapNum = document.createElement('td');
 
-        $defaultLapVal.classList.add(...classes);
-        $defaultLapNum.classList.add(...classes);
+        $defaultLap.classList.add(...classes);
 
         $defaultLap.appendChild($defaultLapVal);
         $defaultLap.appendChild($defaultLapNum);
 
         $lapList.appendChild($defaultLap);
     }
-
+    
     $timer.innerText = '00:00.00';
 }
 
-findHighestLowest = () => {
+const findHighestLowest = () => {
     let maxValue = Math.max(...laps.map(lap => lap.interval));
     let maxLap = laps.find(lap => lap.interval === maxValue);
     let minValue = Math.min(...laps.map(lap => lap.interval));
     let minLap = laps.find(lap => lap.interval === minValue);
-
+    
     return [maxLap, minLap];
 }
 
-paintHighestLowest = (highest, lowest) => {
-    const $valueLaps = document.querySelectorAll('#lap-list tr td');
-
-    $valueLaps.forEach(lap => {
+const paintHighestLowest = (highest, lowest) => {
+    
+    const $valueLapsTr = document.querySelectorAll('#lap-list tr');
+    
+    $valueLapsTr.forEach(lap => {
         lap.classList.remove('highest', 'lowest');
-        if (lap.innerText === highest.value) {
+        if (lap.lastElementChild.innerText === highest.value) {
             lap.classList.add('highest');
-        } else if (lap.innerText === lowest.value) {
+        } else if (lap.lastElementChild.innerText === lowest.value) {
             lap.classList.add('lowest');
         }
     });
+}
+
+const hasId = (element) => {
+    return element.hasAttribute('id');
 }
 
 // TODO: Style better the scrollbar -> it sould have some separation to the edge
