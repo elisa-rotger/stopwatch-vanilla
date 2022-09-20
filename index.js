@@ -156,7 +156,11 @@ const paintHighestLowest = (highest, lowest) => {
     });
 }
 
-// Testing
 $lapList.addEventListener('wheel', () => {
-    $lapList.classList.add('xxx')
-})
+    const $lapContainer = document.querySelector('.lap-container');
+    $lapContainer.classList.add('scrollbar-fade');
+
+    setTimeout(() => {
+        $lapContainer.classList.remove('scrollbar-fade');
+    }, 1000);
+});

@@ -12,34 +12,34 @@ $startStopButton.innerText = 'Start';
 $lapResetButton.innerText = 'Reset';
 
 $startStopButton.onclick = () => {
-    isRunning ? (pauseTimer()) : (window.requestAnimationFrame(step));
+    isRunning ? (pauseTimer()) : (window.requestAnimationFrame(startTimer));
 };
 
 $lapResetButton.onclick = () => {
     isRunning ? (recordLap()) : (resetTimer());
 };
 
-const step = (timestamp) => {
+const startTimer = (timestamp) => {
     $startStopButton.innerText = 'Stop';
     $startStopButton.classList.replace('start', 'stop');
     $lapResetButton.innerText = 'Lap';
 
-    const runningLap = $lapList.firstElementChild;
+    const $runningLap = $lapList.firstElementChild;
 
     startTime = startTime ? startTime : (timestamp - elapsedTime);
     elapsedTime = (timestamp - startTime);
     elapsedTimeLap = (elapsedTime - lapTotal);
 
-    runningLap.classList.remove('empty');
-    runningLap.firstElementChild.innerText = `Lap ${laps.length+1}`;
-    runningLap.id = runningLap.hasAttribute('id') ? runningLap.id : `lap-1`;
+    $runningLap.classList.remove('empty');
+    $runningLap.firstElementChild.innerText = `Lap ${laps.length+1}`;
+    $runningLap.id = $runningLap.hasAttribute('id') ? $runningLap.id : `lap-1`;
     
-    runningLap.lastElementChild.innerText = convertToValue(elapsedTimeLap);
     $timer.innerText = convertToValue(elapsedTime);
+    $runningLap.lastElementChild.innerText = convertToValue(elapsedTimeLap);
 
     isRunning = true;
     
-    myTimer = window.requestAnimationFrame(step);
+    myTimer = window.requestAnimationFrame(startTimer);
 };
 
 const pauseTimer = () => {
@@ -115,12 +115,8 @@ const createLap = () => {
 };
 
 const resetTimer = () => {
-    [startTime, pausedAt, elapsedTime] = [null, null, null];
-    
-    [previousTimeTimer, passedTimeTimer] = [null, null];
-    [previousTimeLap, passedTimeLap] = [null, null];
-
-    laps = [];
+    [startTime, elapsedTime, elapsedTimeLap, lapTotal] = [null, null, null, null];
+    laps = new Array();
     
     $lapList.replaceChildren();
     
@@ -167,5 +163,5 @@ $lapList.addEventListener('wheel', () => {
 
     setTimeout(() => {
         $lapContainer.classList.remove('scrollbar-fade');
-    }, 1500);
+    }, 1000);
 });
