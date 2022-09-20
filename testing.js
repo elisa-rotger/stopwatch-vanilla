@@ -1,11 +1,10 @@
-// For DOM timestamp approach
+// For DOM timestamp approach (main)
 let [startTime, pausedAt, elapsedTime] = [null, null, null];
-let [isRunning, isPaused] = [false, false];
 
-// For Date.now() approach
-let [previousTimeTimer, passedTimeTimer] = [null, null];
+// For Date.now() approach (laps)
 let [previousTimeLap, passedTimeLap] = [null, null];
 
+let isRunning = false;
 let myTimer;
 let laps = new Array();
 
@@ -32,17 +31,11 @@ const step = (timestamp) => {
 
     const runningLap = $lapList.firstElementChild;
 
-    // Trying with the DOM timestamp -> can't get it to calculate correct time passed when pausing
-    startTime = startTime ? startTime : timestamp;
-    startTime = pausedAt ? pausedAt : startTime;
+    // Main timer - With DOM timestamp
+    startTime = startTime ? startTime : (timestamp - elapsedTime);
     elapsedTime = (timestamp - startTime);
 
-    // Reworking it with Date.now() again
-    previousTimeTimer = isRunning ? previousTimeTimer : Date.now();
-    passedTimeTimer += Date.now() - previousTimeTimer;
-    previousTimeTimer = Date.now();
-
-    // Time calc for lap
+    // Lap timer - With Date.now() object
     previousTimeLap = previousTimeLap ? previousTimeLap : Date.now();
     previousTimeLap = isRunning ? previousTimeLap : Date.now();
     passedTimeLap += Date.now() - previousTimeLap;
@@ -54,27 +47,27 @@ const step = (timestamp) => {
     runningLap.firstElementChild.innerText = `Lap ${laps.length+1}`;
     runningLap.id = runningLap.hasAttribute('id') ? runningLap.id : `lap-1`;
 
-    // $timer.innerText = convertToValue(elapsedTime);
-    $timer.innerText = convertToValue(passedTimeTimer);
-
-    // console.log('timestamp: ' + timestamp,'startTime: ' + startTime,'elapsedTime: ' + elapsedTime)
+    $timer.innerText = convertToValue(elapsedTime);
+    // $timer.innerText = convertToValue(passedTimeTimer);
 
     isRunning = true;
     
     myTimer = window.requestAnimationFrame(step);
-}
+};
 
 const pauseTimer = () => {
     isRunning = false;
-    pausedAt = elapsedTime;
 
     $startStopButton.innerText = 'Start';
     $startStopButton.classList.replace('stop', 'start');
     $lapResetButton.innerText = 'Reset';
 
     window.cancelAnimationFrame(myTimer);
+
+    elapsedTime = performance.now() - startTime;
+    startTime = null;
     // debugger
-}
+};
 
 const convertToValue = (totalTime) => {
     // TODO: Add hour calculation + to clock when necessary
@@ -87,13 +80,13 @@ const convertToValue = (totalTime) => {
     totalMinutes = formatNumber(totalMinutes, 2, '0');
     
     return `${totalMinutes}:${totalSeconds}.${totalMilliseconds}`;
-}
+};
 
 const formatNumber = (num, length, character) => {
-    let reducedNum = num.toString().length > 2 ? num.toString().slice(-2) : num;
+    let reducedNum = num.toString().length > 2 ? num.toString().slice(0, 2) : num;
     let baseFormat = new Array(1 + length).join(character);
     return (baseFormat + reducedNum).slice(-baseFormat.length);
-}
+};
 
 const recordLap = () => {
 
@@ -113,7 +106,7 @@ const recordLap = () => {
     };
 
     [previousTimeLap, passedTimeLap] = [null, null];
-}
+};
 
 const createLap = () => {
     const $lap = document.createElement('tr');
@@ -127,7 +120,7 @@ const createLap = () => {
     $lap.appendChild($lapNumber);
     $lap.appendChild($lapTimer);
     $lapList.insertBefore($lap, $lapList.firstChild);
-}
+};
 
 const resetTimer = () => {
     [startTime, pausedAt, elapsedTime] = [null, null, null];
@@ -155,7 +148,7 @@ const resetTimer = () => {
     }
     
     $timer.innerText = '00:00.00';
-}
+};
 
 
 const findHighestLowest = () => {
@@ -165,7 +158,7 @@ const findHighestLowest = () => {
     let minLap = laps.find(lap => lap.interval === minValue);
     
     return [maxLap, minLap];
-}
+};
 
 const paintHighestLowest = (highest, lowest) => {
     const $valueLapsTr = document.querySelectorAll('#lap-list tr');
@@ -174,4 +167,13 @@ const paintHighestLowest = (highest, lowest) => {
         lap.id === `lap-${highest.id}` ? lap.classList.add('highest') : null;
         lap.id === `lap-${lowest.id}` ? lap.classList.add('lowest') : null;
     });
-}
+};
+
+$lapList.addEventListener('wheel', () => {
+    const $lapContainer = document.querySelector('.lap-container');
+    $lapContainer.classList.add('scrollbar-fade');
+
+    setTimeout(() => {
+        $lapContainer.classList.remove('scrollbar-fade');
+    }, 1500);
+});

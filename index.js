@@ -74,7 +74,7 @@ const convertToValue = (totalTime) => {
 }
 
 const formatNumber = (num, length, character) => {
-    let reducedNum = num.toString().length > 2 ? num.toString().slice(-2) : num;
+    let reducedNum = num.toString().length > 2 ? num.toString().slice(0, 2) : num;
     let baseFormat = new Array(1 + length).join(character);
     return (baseFormat + reducedNum).slice(-baseFormat.length);
 }
