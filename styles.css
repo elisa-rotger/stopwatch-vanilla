@@ -30,9 +30,14 @@
     justify-content: center;
     align-items: center;
     font-size: 4.5em;
+    /* font-size: calc(5vw + 2.5vw * () ); */
     font-weight: 200;
     padding-top: 65px;
     font-variant-numeric: tabular-nums;
+}
+
+.crontab span {
+    padding: 5%;
 }
 
 /* Buttons */
