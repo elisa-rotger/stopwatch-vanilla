@@ -1,9 +1,4 @@
-// For DOM timestamp approach (main)
-let [startTime, pausedAt, elapsedTime] = [null, null, null];
-
-// For Date.now() approach (laps)
-let [previousTimeLap, passedTimeLap] = [null, null];
-
+let [startTime, elapsedTime, elapsedTimeLap, lapTotal] = [null, null, null, null];
 let isRunning = false;
 let myTimer;
 let laps = new Array();
@@ -21,7 +16,7 @@ $startStopButton.onclick = () => {
 };
 
 $lapResetButton.onclick = () => {
-    isRunning ? (recordLap()) : (window.cancelAnimationFrame(myTimer), resetTimer());
+    isRunning ? (recordLap()) : (resetTimer());
 };
 
 const step = (timestamp) => {
@@ -31,24 +26,16 @@ const step = (timestamp) => {
 
     const runningLap = $lapList.firstElementChild;
 
-    // Main timer - With DOM timestamp
     startTime = startTime ? startTime : (timestamp - elapsedTime);
     elapsedTime = (timestamp - startTime);
+    elapsedTimeLap = (elapsedTime - lapTotal);
 
-    // Lap timer - With Date.now() object
-    previousTimeLap = previousTimeLap ? previousTimeLap : Date.now();
-    previousTimeLap = isRunning ? previousTimeLap : Date.now();
-    passedTimeLap += Date.now() - previousTimeLap;
-    previousTimeLap = Date.now();
-
-
-    runningLap.lastElementChild.innerText = convertToValue(passedTimeLap);
     runningLap.classList.remove('empty');
     runningLap.firstElementChild.innerText = `Lap ${laps.length+1}`;
     runningLap.id = runningLap.hasAttribute('id') ? runningLap.id : `lap-1`;
-
+    
+    runningLap.lastElementChild.innerText = convertToValue(elapsedTimeLap);
     $timer.innerText = convertToValue(elapsedTime);
-    // $timer.innerText = convertToValue(passedTimeTimer);
 
     isRunning = true;
     
@@ -90,9 +77,13 @@ const formatNumber = (num, length, character) => {
 
 const recordLap = () => {
 
+    lapTotal = elapsedTime;
+    let lapInterval = laps[laps.length-1] ? (lapTotal - laps[laps.length-1].total) : lapTotal;
+
     laps.push({ 
         id: laps.length+1,
-        interval: passedTimeLap 
+        interval: lapInterval,
+        total: elapsedTime
     });
 
     createLap();
@@ -106,6 +97,7 @@ const recordLap = () => {
     };
 
     [previousTimeLap, passedTimeLap] = [null, null];
+
 };
 
 const createLap = () => {
