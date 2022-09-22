@@ -9,10 +9,13 @@
 
 :root {
     --main-bg-color: #101010;
-    --grey-bg-color: #3e3e3e;
+    --grey-bg-color: #3E3E3E;
     --start-bg-color: #172e1c;
     --stop-bg-button: #331314;
-    --main-font-color: 253, 253, 253;
+    --main-font-color: 255, 255, 255;
+    --green-font-color: #50d963;
+    --red-font-color: #f24034;
+    --main-icon-color: #666666;
 }
 
 .main-wrapper {
@@ -43,7 +46,7 @@
     font-size: 4.5em;
     /* font-size: calc(16px + 10px * (100% - 2px)); */
     font-weight: 200;
-    padding-top: 65px;
+    padding-top: 20%;
     font-variant-numeric: tabular-nums;
 }
 
@@ -60,7 +63,7 @@
 }
 
 .button-wrapper {
-    padding: 20%;
+    padding: 19%;
 }
 
 .button-wrapper > button {
@@ -73,27 +76,25 @@
     justify-content: center;
     cursor: pointer;
     font-size: 0.9em;
-    font-weight: 350;
+    font-weight: 300;
 }
 
 .active-reset {
     background-color: var(--grey-bg-color);
-    box-shadow: 0 0 0 1px var(--grey-bg-color), inset 0 0 0 1px var(--main-bg-color);
-    color: rgba(var(--main-font-color), 0.8)
+    box-shadow: 0 0 0 1.5px var(--grey-bg-color), inset 0 0 0 1px var(--main-bg-color);
+    color: rgba(var(--main-font-color), 1)
 }
 
 .active-start {
     background-color: var(--start-bg-color);
-    box-shadow: 0 0 0 1px var(--start-bg-color), inset 0 0 0 1px var(--main-bg-color);
-    color: #50d963;
-    color: rgba(80, 217, 99, 1);
+    box-shadow: 0 0 0 1.5px var(--start-bg-color), inset 0 0 0 1px var(--main-bg-color);
+    color: var(--green-font-color);
 }
 
 .active-stop {
     background-color: var(--stop-bg-button);
-    box-shadow: 0 0 0 1px var(--stop-bg-button), inset 0 0 0 1px var(--main-bg-color);
-    color: #f24034;
-    color: rgba(242, 64, 52, 0.8);
+    box-shadow: 0 0 0 1.5px var(--stop-bg-button), inset 0 0 0 1px var(--main-bg-color);
+    color: var(--red-font-color);
 }
 
 /* Lil buttons in the middle */
@@ -125,7 +126,7 @@
 
 .lap-container {
     padding: 0 3%;
-    font-size: 200;
+    font-size: 0.9rem;
     font-weight: 300;
     margin-right: 2px;
     overflow: auto;
@@ -190,5 +191,44 @@
 
 footer {
     border-top: 1px solid #3a3a3a;  /* 0001 */
-    background-color: #211e1e;
+    background-color: #181818;
+    color: var(--main-icon-color);
+    font-size: 0.6rem;
+    font-weight: bold;
+}
+
+.icon-wrapper {
+    display: flex;
+    justify-content: space-around;
+    padding: 2%;
+}
+
+.icon {
+    width: 20%;
+}
+
+footer img {
+    display: block;
+    margin: auto;
+    width: 40%;
+}
+
+footer p {
+    text-align: center;
+    padding-top: 2px;
+}
+
+.bottom-wrapper {
+    padding-top: 2px;
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
+}
+
+.bottom-line {
+    background-color: rgba(var(--main-font-color), 1);
+    width: 40%;
+    height: 5px;
+    border-radius: 3px;
+    margin: 2% 0;
 }

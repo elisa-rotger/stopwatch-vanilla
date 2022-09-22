@@ -16,37 +16,45 @@ export function formatNumber(num, length, character) {
     return num.toString().padStart(length, character);
 };
 
-export function paintHighestLowest(lowest, highest) {
-    console.log(highest, lowest);
-    const $valueLapsTr = document.querySelectorAll('#lap-list tr');
-    $valueLapsTr.forEach(lap => {
-        lap.classList.remove('highest', 'lowest');
-        lap.id === `lap-${highest.id}` ? lap.classList.add('highest') : null;
-        lap.id === `lap-${lowest.id}` ? lap.classList.add('lowest') : null;
-    });
-};
-
-
-// TESTING
-// Pass just the id and paint that one -> maybe arg 'action' to add or remove the class?
-// Doable, but has to be called too many times -> figure out a 'swap' function?
-
-export function paintHighestLowestTest(lapId, action, lapStatus) {
-    let lap = document.getElementById(`lap-${lapId}`);
-    
-    action === 'add' ? lap.classList.add(lapStatus) : null;
-    action === 'remove' ? lap.classList.remove(lapStatus) : null;
-
-    // lap.classList.action(lapStatus)
-};
-
-
-/* Lap ID counter */
-
 export function idCounter() {
     let count = 0;
     return function generateId(reset) {
         if (reset) count = 0;
         return ++count;
     };
+};
+
+export function updateNewRunningLap(lapId) {
+    const $runningLap = document.getElementById('lap-list').firstElementChild;
+    $runningLap.firstElementChild.innerText = `Lap ${lapId}`;
+    $runningLap.id = `lap-${lapId}`;
+};
+
+export function createLapHTML(numberOfLaps) {
+    const $lapList = document.getElementById('lap-list');
+    for (let i=0; i<numberOfLaps; i++) {
+        const $lap = document.createElement('tr');
+        const $lapNumber = document.createElement('td');
+        const $lapTimer = document.createElement('td');
+        
+        $lap.appendChild($lapNumber);
+        $lap.appendChild($lapTimer);
+        $lap.classList.add('lap');
+        $lapList.insertBefore($lap, $lapList.firstChild);
+    }
+};
+
+export function paintHighestLowest(lowestLap, highestLap, action) {
+    const lowest = document.getElementById(`lap-${lowestLap.id}`);
+    const highest = document.getElementById(`lap-${highestLap.id}`);
+    if (lowest) {
+        action === 'remove' 
+            ? lowest.classList.remove('highest', 'lowest') 
+            : lowest.classList.add('lowest');
+    }
+    if (highest) {
+        action === 'remove' 
+            ? highest.classList.remove('highest', 'lowest')
+            : highest.classList.add('highest');
+    }
 };
