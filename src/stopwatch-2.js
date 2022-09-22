@@ -1,13 +1,11 @@
-import { paintHighestLowest, getFormattedTime, idCounter, paintHighestLowestTest } from './utils.js';
+import { paintHighestLowest, getFormattedTime } from './utils.js';
 
-let [startTime, elapsedTime, elapsedTimeLap, lapTotalTime] = [null, null, null, null];
-let highestLap, lowestLap;
+let [startTime, elapsedTime, elapsedTimeLap, lapTotal] = [null, null, null, null];
 let isRunning = false;
 let myTimer;
 let laps = new Array();
 
-let generateLapId = idCounter();
-let lapId;
+let [ highestLap, lowestLap ] = [{ interval: 0 }, { interval: 0 }];
 
 const $timer = document.getElementById('timer');
 const $startStopButton = document.getElementById('start-stop');
@@ -27,21 +25,18 @@ $lapResetButton.onclick = () => {
 
 const startTimer = (currentTimestamp) => {
     $startStopButton.innerText = 'Stop';
-    $startStopButton.classList.replace('active-start', 'active-stop');
+    $startStopButton.classList.replace('start', 'stop');
     $lapResetButton.innerText = 'Lap';
 
     const $runningLap = $lapList.firstElementChild;
 
     startTime = startTime ? startTime : (currentTimestamp - elapsedTime);
     elapsedTime = (currentTimestamp - startTime);
-    elapsedTimeLap = (elapsedTime - lapTotalTime);
-
-    lapId = lapId ? lapId : generateLapId(false);
+    elapsedTimeLap = (elapsedTime - lapTotal);
 
     $runningLap.classList.remove('empty');
-    $runningLap.firstElementChild.innerText = `Lap ${lapId}`;
-    $runningLap.id = `lap-${lapId}`;
-    $runningLap.className = 'lap';
+    $runningLap.firstElementChild.innerText = `Lap ${laps.length+1}`;
+    $runningLap.id = $runningLap.hasAttribute('id') ? $runningLap.id : `lap-1`;
     
     $timer.firstElementChild.innerText = getFormattedTime(elapsedTime);
     $runningLap.lastElementChild.innerText = getFormattedTime(elapsedTimeLap);
@@ -52,90 +47,59 @@ const startTimer = (currentTimestamp) => {
 };
 
 const pauseTimer = () => {
-    window.cancelAnimationFrame(myTimer);
     isRunning = false;
-    startTime = null;
 
     $startStopButton.innerText = 'Start';
-    $startStopButton.classList.replace('active-stop', 'active-start');
+    $startStopButton.classList.replace('stop', 'start');
     $lapResetButton.innerText = 'Reset';
+
+    window.cancelAnimationFrame(myTimer);
+
+    elapsedTime = performance.now() - startTime;
+    startTime = null;
 };
 
 const recordLap = () => {
-    lapTotalTime = elapsedTime;
 
-    let newLap = { 
-        id: lapId,
-        interval: elapsedTimeLap,
-    };
+    lapTotal = elapsedTime;
+    let lapInterval = laps[laps.length-1] ? (lapTotal - laps[laps.length-1].total) : lapTotal;
 
-    laps.push(newLap);
+    laps.push({ 
+        id: laps.length,
+        interval: lapInterval,
+        total: elapsedTime
+    });
+
     createLapHTML();
-    calculateHighestLowest(newLap);
-    
-    let lastLapClasses = $lapList.lastElementChild.classList;
-    lastLapClasses.contains('empty') ? $lapList.removeChild($lapList.lastElementChild) : null;  
 
-    lapId = generateLapId(false);
+    if (lowestLap.interval === 0) lowestLap = { id: laps.length, interval: lapInterval, total: elapsedTime };
+    if (lapInterval > highestLap.interval) highestLap = { id: laps.length, interval: lapInterval, total: elapsedTime };
+    if (lapInterval < lowestLap.interval) lowestLap = { id: laps.length, interval: lapInterval, total: elapsedTime };
+
+    let lastLapClasses = $lapList.lastElementChild.classList;
+    lastLapClasses.contains('empty') ? $lapList.removeChild($lapList.lastElementChild) : null;
+
+    if (laps.length >= 3) paintHighestLowest(lowestLap, highestLap);
+
 };
 
 const createLapHTML = () => {
     const $lap = document.createElement('tr');
     const $lapNumber = document.createElement('td');
     const $lapTimer = document.createElement('td');
-    
+
+    $lapNumber.innerText = `Lap ${laps.length+1}`;
+    $lap.id = `lap-${laps.length+1}`;
+    $lap.className = 'lap';
+
     $lap.appendChild($lapNumber);
     $lap.appendChild($lapTimer);
     $lapList.insertBefore($lap, $lapList.firstChild);
 };
 
-const calculateHighestLowest = (newLap) => {
-
-    if (laps.length === 1) {
-        // lowestLap = newLap; 
-        // highestLap = newLap;
-
-        lowestLap = {...newLap}; 
-        highestLap = {...newLap};
-    }
-    
-    if (newLap.interval < lowestLap.interval) {
-        console.log('lowest');
-
-        // lowestLap = newLap;
-
-        lowestLap.id = newLap.id;
-        lowestLap.interval = newLap.interval;
-
-        // Object.assign(lowestLap, newLap);
-    };
-
-    if (newLap.interval > highestLap.interval) {
-        console.log('highest');
-
-        // highestLap = newLap;
-
-        highestLap.id = newLap.id;
-        highestLap.interval = newLap.interval;
-
-        // Object.assign(highestLap, newLap);
-    };
-
-    laps.length >= 2 ? paintHighestLowest(lowestLap, highestLap) : null;
-};
-
-const resetTimer = (event) => {
-    [startTime, elapsedTime, elapsedTimeLap, lapTotalTime] = [null, null, null, null];
-    // Brand new array -> new reference 
-    // laps = new Array();
-    // Same reference -> if other variables 'point' to laps, this will also affect them
-    laps.length = 0;
-
-    // Is there a way to re-set the counter in the closure without having to instance another one?
-    // generateLapId = idCounter();
-    // lapId = null;
-    // Maybe like this?
-    lapId = generateLapId(true);
+const resetTimer = () => {
+    [startTime, elapsedTime, elapsedTimeLap, lapTotal] = [null, null, null, null];
+    laps = new Array();
     
     $lapList.replaceChildren();
     
@@ -157,13 +121,11 @@ const resetTimer = (event) => {
     $timer.firstElementChild.innerText = '00:00.00';
 };
 
-/* Fade scrollbar effect */
-
 $lapList.addEventListener('wheel', () => {
     const $lapContainer = document.querySelector('.lap-container');
     $lapContainer.classList.add('scrollbar-fade');
 
     setTimeout(() => {
         $lapContainer.classList.remove('scrollbar-fade');
-    }, 1500);
+    }, 1000);
 });

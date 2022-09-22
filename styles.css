@@ -1,23 +1,16 @@
 * {
     margin: 0;
     box-sizing: border-box;
+    /* font-family: 'HelveticaNeue-UltraLight', cursive; */
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     /* outline: 1px solid red !important; */
 }
 
 /* TODO: Add variable declarations for main colors */
 
-:root {
-    --main-bg-color: #101010;
-    --grey-bg-color: #3e3e3e;
-    --start-bg-color: #172e1c;
-    --stop-bg-button: #331314;
-    --main-font-color: 253, 253, 253;
-}
-
-.main-wrapper {
-    width: 390px; /* 0010 */
-    height: 844px;
+.inner {
+    width: 340px; /* 0010 */
+    height: 750px;
     margin: auto;
     position: absolute;
     left: 0;
@@ -25,23 +18,19 @@
     top: 0;
     bottom: 0;
     display: grid;
-    grid-template-rows: 40% 15% 35% 10%;
-    background-color: var(--main-bg-color);
-}
-
-.inner > div {
-    width: 100%;
+    grid-template-rows: 310px 100px 270px;
+    background-color: #101010;
 }
 
 /* Timer */
 
 .crontab {
-    color: rgba(var(--main-font-color));
+    color: white;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 4.5em;
-    /* font-size: calc(16px + 10px * (100% - 2px)); */
+    /* font-size: calc(5vw + 2.5vw * () ); */
     font-weight: 200;
     padding-top: 65px;
     font-variant-numeric: tabular-nums;
@@ -54,17 +43,19 @@
 /* Buttons */
 
 .buttons-container {
+    padding: 0 10px;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 2%;
+    grid-template-columns: 100px 120px 100px;
 }
 
 .button-wrapper {
-    padding: 20%;
+    padding: 13%;
 }
 
-.button-wrapper > button {
-    border: 1px solid var(--main-bg-color);
+.out {
+    border: 1px solid #101010;
+    background-color: #48484A;
+    padding-top: 1px;
     border-radius: 50%;
     height: 100%;
     width: 100%;
@@ -72,26 +63,29 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 0.9em;
+    font-size:0.8em;
     font-weight: 350;
 }
 
-.active-reset {
-    background-color: var(--grey-bg-color);
-    box-shadow: 0 0 0 1px var(--grey-bg-color), inset 0 0 0 1px var(--main-bg-color);
-    color: rgba(var(--main-font-color), 0.8)
+/* TODO: Change class names so that they dont describe their functionality or color */
+
+.reset {
+    background-color: #3e3e3e;
+    box-shadow: 0 0 0 1px #3e3e3e, inset 0 0 0 1px #101010;
+    color: #fdfdfd;
+    color: rgba(253, 253, 253, 0.8)
 }
 
-.active-start {
-    background-color: var(--start-bg-color);
-    box-shadow: 0 0 0 1px var(--start-bg-color), inset 0 0 0 1px var(--main-bg-color);
+.start {
+    background-color: #172e1c;
+    box-shadow: 0 0 0 1px #172e1c, inset 0 0 0 1px #101010;
     color: #50d963;
-    color: rgba(80, 217, 99, 1);
+    color: rgba(80, 217, 99, 0.8);
 }
 
-.active-stop {
-    background-color: var(--stop-bg-button);
-    box-shadow: 0 0 0 1px var(--stop-bg-button), inset 0 0 0 1px var(--main-bg-color);
+.stop {
+    background-color: #331314;
+    box-shadow: 0 0 0 1px #331314, inset 0 0 0 1px #101010;
     color: #f24034;
     color: rgba(242, 64, 52, 0.8);
 }
@@ -101,7 +95,7 @@
 .circle-wrapper {
     display: inline-flex;
     flex-wrap: wrap;
-    gap: 7%;
+    gap: 9px;
     justify-content: center;
     align-items: center;
 }
@@ -109,24 +103,23 @@
 .circle {
     width: 7px;
     height: 7px;
-    background-color: rgb(var(--main-font-color));
+    background-color: rgb(221, 221, 221);
     border-radius: 50%;
 }
 
-.circle:first-child {
-    background-color: rgb(var(--main-font-color));
+.white {
+    background-color: white;
 }
 
-.circle:last-child {
-    background-color: var(--grey-bg-color);
+.grey {
+    background-color: #3e3e3e;
 }
 
 /* Laps */
 
 .lap-container {
     padding: 0 3%;
-    font-size: 200;
-    font-weight: 300;
+    font-size: small;
     margin-right: 2px;
     overflow: auto;
     overflow-y: auto;
@@ -134,7 +127,7 @@
     scrollbar-gutter: both-edges stable;
     transition: color 0.8s ease-out;
     /* Firefox support */
-    scrollbar-color: rgb(136, 136, 136, 1) var(--main-bg-color);
+    scrollbar-color: rgb(136, 136, 136, 1) #101010;
     scrollbar-width: thin;
 }
 
@@ -143,14 +136,14 @@
 }
 
 .lap-table {
-    color: rgb(var(--main-font-color));
+    color: white;
     width: 100%;
     border-top: 1px solid #292929;
     border-collapse: collapse; 
 }
 
 #lap-list tr td {
-    height: 2.8rem; /* 0102 */
+    height: 35px; /* 0102 */
 }
 
 #lap-list tr td:last-child {
