@@ -32,6 +32,7 @@ export function updateNewRunningLap(lapId) {
 };
 
 export function paintHighestLowest(lowestLap, highestLap, action) {
+    // console.log(highestLap, lowestLap)
     const lowest = document.getElementById(`lap-${lowestLap.id}`);
     const highest = document.getElementById(`lap-${highestLap.id}`);
     if (lowest) {

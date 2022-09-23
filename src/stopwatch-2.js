@@ -72,7 +72,8 @@ const recordLap = () => {
 
     createLapHTML(1);
     $runningLap = $lapList.firstElementChild;
-    updateNewRunningLap(generateLapId(false));
+    lapId = generateLapId(false);
+    updateNewRunningLap(lapId);
     $lapList.lastElementChild.hasAttribute('id') ? null : $lapList.removeChild($lapList.lastElementChild);  
 };
 
