@@ -1,13 +1,7 @@
 import { getFormattedTime, idCounter, updateNewRunningLap, createLapHTML, paintHighestLowest } from './utils.js';
 
-let [startTime, elapsedTime, elapsedTimeLap, lapTotalTime] = [null, null, null, null];
-let [highestLap, lowestLap] = [null, null]
-let isRunning = false;
-let laps = new Array();
-let myTimer;
-
+createLapHTML(6);
 let generateLapId = idCounter();
-let lapId;
 
 const $timer = document.getElementById('timer');
 const $startStopButton = document.getElementById('start-stop');
@@ -15,40 +9,48 @@ const $lapResetButton = document.getElementById('lap-reset');
 const $lapList = document.getElementById('lap-list');
 let $runningLap = $lapList.firstElementChild;
 
+let [startTime, elapsedTime, lapTotalTime] = [null, null, null];
+let [highestLap, lowestLap] = [null, null];
+let isRunning = false;
+let laps = new Array();
+let myTimer;
+let lapId;
+
 $startStopButton.innerText = 'Start';
 $lapResetButton.innerText = 'Reset';
 
 $startStopButton.onclick = () => {
-    if (isRunning) {
-        pauseTimer();
-    } else {
-        isRunning = true;
-        lapId = lapId ? lapId : generateLapId(false);
-
-        $startStopButton.innerText = 'Stop';
-        $startStopButton.classList.replace('active-start', 'active-stop');
-        $lapResetButton.innerText = 'Lap';
-
-        updateNewRunningLap(lapId);
-
-        window.requestAnimationFrame(startTimer);
-    }
+    isRunning ? pauseTimer() : startTimer();
 };
 
 $lapResetButton.onclick = () => {
-    isRunning ? (recordLap()) : (resetTimer());
+    isRunning ? recordLap() : resetTimer();
 };
 
-const startTimer = (currentTimestamp) => {
+const startTimer = () => {
+    isRunning = true;
+    lapId = lapId ? lapId : generateLapId(false);
+
+    $startStopButton.innerText = 'Stop';
+    $startStopButton.classList.replace('active-start', 'active-stop');
+    $lapResetButton.innerText = 'Lap';
+
+    updateNewRunningLap(lapId);
+
+    window.requestAnimationFrame(renderTime);
+}
+
+const renderTime = (currentTimestamp) => {
 
     startTime = startTime ? startTime : (currentTimestamp - elapsedTime);
     elapsedTime = (currentTimestamp - startTime);
-    elapsedTimeLap = (elapsedTime - lapTotalTime);
     
+    elapsedTime > 3600000 ? $timer.firstElementChild.classList.add('hourly') : null;
+
     $timer.firstElementChild.innerText = getFormattedTime(elapsedTime);
-    $runningLap.lastElementChild.innerText = getFormattedTime(elapsedTimeLap);
+    $runningLap.lastElementChild.innerText = getFormattedTime(elapsedTime - lapTotalTime);
     
-    myTimer = window.requestAnimationFrame(startTimer);
+    myTimer = window.requestAnimationFrame(renderTime);
 };
 
 const pauseTimer = () => {
@@ -62,46 +64,31 @@ const pauseTimer = () => {
 };
 
 const recordLap = () => {
+    let newLap = { id: lapId, interval: elapsedTime - lapTotalTime };
     lapTotalTime = elapsedTime;
-
-    let newLap = { 
-        id: lapId,
-        interval: elapsedTimeLap,
-    };
     laps.push(newLap);
-    createLapHTML(1);
+
     calculateHighestLowest(newLap);
-    $lapList.lastElementChild.hasAttribute('id') ? null : $lapList.removeChild($lapList.lastElementChild);  
+
+    createLapHTML(1);
     $runningLap = $lapList.firstElementChild;
-    lapId = generateLapId(false);
-    updateNewRunningLap(lapId);
+    updateNewRunningLap(generateLapId(false));
+    $lapList.lastElementChild.hasAttribute('id') ? null : $lapList.removeChild($lapList.lastElementChild);  
 };
 
 const calculateHighestLowest = (newLap) => {
     laps.length >= 2 ? paintHighestLowest(lowestLap, highestLap, 'remove') : null;
     
-    if (laps.length === 1) {
-        // lowestLap = newLap; 
-        // highestLap = newLap;
-        lowestLap = {...newLap}; 
-        highestLap = {...newLap};
-    }
+    if (laps.length === 1) lowestLap = newLap, highestLap = newLap;
     
-    if (newLap.interval < lowestLap.interval) {
-        // lowestLap = newLap;
-        Object.assign(lowestLap, newLap);
-    };
-
-    if (newLap.interval > highestLap.interval) {
-        // highestLap = newLap;
-        Object.assign(highestLap, newLap);
-    };
+    if (newLap.interval < lowestLap.interval) lowestLap = newLap;
+    if (newLap.interval > highestLap.interval) highestLap = newLap;
 
     laps.length >= 2 ? paintHighestLowest(lowestLap, highestLap, 'add') : null;
 };
 
 const resetTimer = () => {
-    [startTime, elapsedTime, elapsedTimeLap, lapTotalTime] = [null, null, null, null];
+    [startTime, elapsedTime, lapTotalTime] = [null, null, null, null];
     laps.length = 0;
     lapId = generateLapId(true);    
     $lapList.replaceChildren();

@@ -5,8 +5,6 @@
     /* outline: 1px solid red !important; */
 }
 
-/* TODO: Add variable declarations for main colors */
-
 :root {
     --main-bg-color: #101010;
     --grey-bg-color: #3E3E3E;
@@ -52,6 +50,10 @@
 
 .crontab span {
     padding: 5%;
+}
+
+.crontab .hourly {
+    font-size: 4.5vh;
 }
 
 /* Buttons */

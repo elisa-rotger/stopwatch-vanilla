@@ -4,6 +4,7 @@ export function getFormattedTime(totalMilliseconds) {
     let totalMinutes = Math.floor((totalMilliseconds / 1000) / 60) % 60;
     let totalHours = Math.floor(((totalMilliseconds / 1000) / 60) / 60);
     
+    // TODO: Refactor formatNumber so it takes all of them at once
     totalSeconds = formatNumber(totalSeconds, 2, '0');
     totalMinutes = formatNumber(totalMinutes, 2, '0');
     totalHours = totalHours ? formatNumber(totalHours, 3, '0') : null;
@@ -30,20 +31,6 @@ export function updateNewRunningLap(lapId) {
     $runningLap.id = `lap-${lapId}`;
 };
 
-export function createLapHTML(numberOfLaps) {
-    const $lapList = document.getElementById('lap-list');
-    for (let i=0; i<numberOfLaps; i++) {
-        const $lap = document.createElement('tr');
-        const $lapNumber = document.createElement('td');
-        const $lapTimer = document.createElement('td');
-        
-        $lap.appendChild($lapNumber);
-        $lap.appendChild($lapTimer);
-        $lap.classList.add('lap');
-        $lapList.insertBefore($lap, $lapList.firstChild);
-    }
-};
-
 export function paintHighestLowest(lowestLap, highestLap, action) {
     const lowest = document.getElementById(`lap-${lowestLap.id}`);
     const highest = document.getElementById(`lap-${highestLap.id}`);
@@ -57,4 +44,15 @@ export function paintHighestLowest(lowestLap, highestLap, action) {
             ? highest.classList.remove('highest', 'lowest')
             : highest.classList.add('highest');
     }
+};
+
+export function createLapHTML(numberOfLaps) {
+    const $lapList = document.getElementById('lap-list');
+    for (let i=0; i<numberOfLaps; i++) {
+        const $lap = document.createElement('tr');
+        $lap.classList.add('lap');
+        $lap.appendChild(document.createElement('td'));
+        $lap.appendChild(document.createElement('td'));
+        $lapList.insertBefore($lap, $lapList.firstChild);
+    };
 };
