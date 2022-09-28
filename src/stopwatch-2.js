@@ -12,7 +12,7 @@ let $runningLap = $lapList.firstElementChild;
 let [startTime, elapsedTime, lapTotalTime] = [null, null, null];
 let [highestLap, lowestLap] = [null, null];
 let isRunning = false;
-let laps = new Array();
+const laps = new Array();
 let myTimer;
 let lapId;
 
@@ -65,8 +65,8 @@ const pauseTimer = () => {
 
 const recordLap = () => {
     let newLap = { id: lapId, interval: elapsedTime - lapTotalTime };
-    lapTotalTime = elapsedTime;
     laps.push(newLap);
+    lapTotalTime = elapsedTime;
 
     calculateHighestLowest(newLap);
 
@@ -89,7 +89,7 @@ const calculateHighestLowest = (newLap) => {
 };
 
 const resetTimer = () => {
-    [startTime, elapsedTime, lapTotalTime] = [null, null, null, null];
+    [startTime, elapsedTime, lapTotalTime] = [null, null, null];
     laps.length = 0;
     lapId = generateLapId(true);    
     $lapList.replaceChildren();
@@ -98,8 +98,6 @@ const resetTimer = () => {
     createLapHTML(6);
     $runningLap = $lapList.firstElementChild;
 };
-
-/* Fade scrollbar effect */
 
 $lapList.addEventListener('wheel', () => {
     const $lapContainer = document.querySelector('.lap-container');

@@ -1,20 +1,28 @@
+import { getFormattedTime, idCounter, updateNewRunningLap, createLapHTML, paintHighestLowest } from './utils.js';
+
+createLapHTML(6);
+let generateLapId = idCounter();
+
 let interval = null;
 let isRunning = false;
-let laps = new Array();
+const laps = new Array();
+let lapId;
 
 let [previousTimeTimer, passedTimeTimer] = [null, null];
 let [previousTimeLap, passedTimeLap] = [null, null];
+let [highestLap, lowestLap] = [null, null];
 
 const $timer = document.getElementById('timer');
 const $startStopButton = document.getElementById('start-stop');
 const $lapResetButton = document.getElementById('lap-reset');
 const $lapList = document.getElementById('lap-list');
+let $runningLap = $lapList.firstElementChild;
 
 $startStopButton.innerText = 'Start';
 $lapResetButton.innerText = 'Reset';
 
 $startStopButton.onclick = () => {
-    isRunning ? (pauseTimer()) : (interval = setInterval(startTimer, 10));
+    isRunning ? (pauseTimer()) : (startTimer());
 };
 
 $lapResetButton.onclick = () => {
@@ -22,14 +30,21 @@ $lapResetButton.onclick = () => {
 };
 
 const startTimer = () => {
+    isRunning = true;
+    lapId = lapId ? lapId : generateLapId(false);
+
     $startStopButton.innerText = 'Stop';
     $startStopButton.classList.replace('start', 'stop');
     $lapResetButton.innerText = 'Lap';
 
-    const runningLap = $lapList.firstElementChild;
+    updateNewRunningLap(lapId);
 
+    interval = setInterval(renderTime, 10);
+}
+
+const renderTime = () => {
     // Time calc for clock
-    previousTimeTimer = isRunning ? previousTimeTimer : Date.now();
+    previousTimeTimer = previousTimeTimer ? previousTimeTimer : Date.now();
     passedTimeTimer += Date.now() - previousTimeTimer;
     previousTimeTimer = Date.now();
 
@@ -39,16 +54,8 @@ const startTimer = () => {
     passedTimeLap += Date.now() - previousTimeLap;
     previousTimeLap = Date.now();
 
-    let clock = convertToValue(passedTimeTimer);
-    let lapClock = convertToValue(passedTimeLap);
-
-    runningLap.lastElementChild.innerText = lapClock;
-    runningLap.classList.remove('empty');
-    runningLap.firstElementChild.innerText = `Lap ${laps.length+1}`;
-    runningLap.id = runningLap.hasAttribute('id') ? runningLap.id : `lap-1`;
-
-    $timer.innerText = clock;
-    isRunning = true;
+    $timer.firstElementChild.innerText = getFormattedTime(passedTimeTimer);
+    $runningLap.lastElementChild.innerText = getFormattedTime(passedTimeLap);
 }
 
 const pauseTimer = () => {
@@ -60,100 +67,42 @@ const pauseTimer = () => {
     $lapResetButton.innerText = 'Reset';
 }
 
-const convertToValue = (totalTime) => {
-    // TODO: Add hour calculation + to clock when necessary
-    let totalMinutes = Math.floor(totalTime / 60000);
-    let totalSeconds = Math.floor((totalTime % 60000) / 1000).toFixed(0);
-    let totalMilliseconds = totalTime - (totalMinutes * 60000) - (totalSeconds * 1000);
-    
-    totalMilliseconds = formatNumber(Math.round(totalMilliseconds), 2, '0');
-    totalSeconds = formatNumber(totalSeconds, 2, '0');
-    totalMinutes = formatNumber(totalMinutes, 2, '0');
-    
-    return `${totalMinutes}:${totalSeconds}.${totalMilliseconds}`;
-}
-
-const formatNumber = (num, length, character) => {
-    let reducedNum = num.toString().length > 2 ? num.toString().slice(0, 2) : num;
-    let baseFormat = new Array(1 + length).join(character);
-    return (baseFormat + reducedNum).slice(-baseFormat.length);
-}
-
 const recordLap = () => {
 
-    laps.push({ 
-        id: laps.length+1,
-        interval: passedTimeLap 
-    });
-
-    createLap();
-
-    let lastLapClasses = $lapList.lastElementChild.classList;
-    lastLapClasses.contains('empty') ? $lapList.removeChild($lapList.lastElementChild) : null;
-
-    if (laps.length >= 3) {
-        let edgeLaps = findHighestLowest();
-        paintHighestLowest(edgeLaps[0], edgeLaps[1]);
-    };
-
+    let newLap = { id: lapId, interval: passedTimeLap };
+    laps.push(newLap);
     [previousTimeLap, passedTimeLap] = [null, null];
+
+    calculateHighestLowest(newLap);
+
+    createLapHTML(1);
+    $runningLap = $lapList.firstElementChild;
+    lapId = generateLapId(false);
+    updateNewRunningLap(lapId);
+    $lapList.lastElementChild.hasAttribute('id') ? null : $lapList.removeChild($lapList.lastElementChild); 
 }
 
-const createLap = () => {
-    const $lap = document.createElement('tr');
-    const $lapNumber = document.createElement('td');
-    const $lapTimer = document.createElement('td');
+const calculateHighestLowest = (newLap) => {
+    laps.length >= 2 ? paintHighestLowest(lowestLap, highestLap, 'remove') : null;
+    
+    if (laps.length === 1) lowestLap = newLap, highestLap = newLap;
+    
+    if (newLap.interval < lowestLap.interval) lowestLap = newLap;
+    if (newLap.interval > highestLap.interval) highestLap = newLap;
 
-    $lapNumber.innerText = `Lap ${laps.length+1}`;
-    $lap.id = `lap-${laps.length+1}`;
-    $lap.className = 'lap';
-
-    $lap.appendChild($lapNumber);
-    $lap.appendChild($lapTimer);
-    $lapList.insertBefore($lap, $lapList.firstChild);
-}
+    laps.length >= 2 ? paintHighestLowest(lowestLap, highestLap, 'add') : null;
+};
 
 const resetTimer = () => {
     [previousTimeTimer, passedTimeTimer] = [null, null];
     [previousTimeLap, passedTimeLap] = [null, null];
-    laps = [];
-    
+    laps.length = 0;
+    lapId = generateLapId(true);    
     $lapList.replaceChildren();
+    $timer.firstElementChild.innerText = '00:00.00';
     
-    for (let i = 1; i <= 6; i++) {
-        const classes = ['lap', 'empty'];
-        
-        const $defaultLap = document.createElement('tr');
-        const $defaultLapVal = document.createElement('td');
-        const $defaultLapNum = document.createElement('td');
-        
-        $defaultLap.classList.add(...classes);
-        
-        $defaultLap.appendChild($defaultLapVal);
-        $defaultLap.appendChild($defaultLapNum);
-        
-        $lapList.appendChild($defaultLap);
-    }
-    
-    $timer.innerText = '00:00.00';
-}
-
-const findHighestLowest = () => {
-    let maxValue = Math.max(...laps.map(lap => lap.interval));
-    let maxLap = laps.find(lap => lap.interval === maxValue);
-    let minValue = Math.min(...laps.map(lap => lap.interval));
-    let minLap = laps.find(lap => lap.interval === minValue);
-    
-    return [maxLap, minLap];
-}
-
-const paintHighestLowest = (highest, lowest) => {
-    const $valueLapsTr = document.querySelectorAll('#lap-list tr');
-    $valueLapsTr.forEach(lap => {
-        lap.classList.remove('highest', 'lowest');
-        lap.id === `lap-${highest.id}` ? lap.classList.add('highest') : null;
-        lap.id === `lap-${lowest.id}` ? lap.classList.add('lowest') : null;
-    });
+    createLapHTML(6);
+    $runningLap = $lapList.firstElementChild;
 }
 
 $lapList.addEventListener('wheel', () => {

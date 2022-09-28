@@ -32,23 +32,21 @@ export function updateNewRunningLap(lapId) {
 };
 
 export function paintHighestLowest(lowestLap, highestLap, action) {
-    // console.log(highestLap, lowestLap)
     const lowest = document.getElementById(`lap-${lowestLap.id}`);
     const highest = document.getElementById(`lap-${highestLap.id}`);
-    if (lowest) {
-        action === 'remove' 
-            ? lowest.classList.remove('highest', 'lowest') 
-            : lowest.classList.add('lowest');
-    }
-    if (highest) {
-        action === 'remove' 
-            ? highest.classList.remove('highest', 'lowest')
-            : highest.classList.add('highest');
+
+    if (action === 'remove') {
+        lowest.classList.remove('highest', 'lowest');
+        highest.classList.remove('highest', 'lowest');
+    } else {
+        lowest.classList.add('lowest');
+        highest.classList.add('highest');
     }
 };
 
 export function createLapHTML(numberOfLaps) {
     const $lapList = document.getElementById('lap-list');
+    // TODO: Look up insertCell
     for (let i=0; i<numberOfLaps; i++) {
         const $lap = document.createElement('tr');
         $lap.classList.add('lap');
