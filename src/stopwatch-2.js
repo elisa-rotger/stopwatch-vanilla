@@ -7,12 +7,13 @@ const $timer = document.getElementById('timer');
 const $startStopButton = document.getElementById('start-stop');
 const $lapResetButton = document.getElementById('lap-reset');
 const $lapList = document.getElementById('lap-list');
+
 let $runningLap = $lapList.firstElementChild;
 
 let [startTime, elapsedTime, lapTotalTime] = [null, null, null];
 let [highestLap, lowestLap] = [null, null];
 let isRunning = false;
-const laps = new Array();
+let laps = [];
 let myTimer;
 let lapId;
 
@@ -35,7 +36,7 @@ const startTimer = () => {
     $startStopButton.classList.replace('active-start', 'active-stop');
     $lapResetButton.innerText = 'Lap';
 
-    updateNewRunningLap(lapId);
+    updateNewRunningLap($runningLap, lapId);
 
     window.requestAnimationFrame(renderTime);
 }
@@ -65,7 +66,7 @@ const pauseTimer = () => {
 
 const recordLap = () => {
     let newLap = { id: lapId, interval: elapsedTime - lapTotalTime };
-    laps.push(newLap);
+    laps = [...laps, newLap];
     lapTotalTime = elapsedTime;
 
     calculateHighestLowest(newLap);
@@ -73,7 +74,7 @@ const recordLap = () => {
     createLapHTML(1);
     $runningLap = $lapList.firstElementChild;
     lapId = generateLapId(false);
-    updateNewRunningLap(lapId);
+    updateNewRunningLap($runningLap, lapId);
     $lapList.lastElementChild.hasAttribute('id') ? null : $lapList.removeChild($lapList.lastElementChild);  
 };
 
@@ -90,7 +91,7 @@ const calculateHighestLowest = (newLap) => {
 
 const resetTimer = () => {
     [startTime, elapsedTime, lapTotalTime] = [null, null, null];
-    laps.length = 0;
+    laps = [];
     lapId = generateLapId(true);    
     $lapList.replaceChildren();
     $timer.firstElementChild.innerText = '00:00.00';

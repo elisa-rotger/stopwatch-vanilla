@@ -42,7 +42,6 @@
     justify-content: center;
     align-items: center;
     font-size: 4.5em;
-    /* font-size: calc(16px + 10px * (100% - 2px)); */
     font-weight: 200;
     padding-top: 20%;
     font-variant-numeric: tabular-nums;
@@ -185,7 +184,6 @@
 /* Handle */
 .lap-container::-webkit-scrollbar-thumb {
     border-radius: 15pt;
-    /* background-clip: padding-box; */
     box-shadow: inset 0 0 0 10px;
 }
 
@@ -224,7 +222,6 @@ footer p {
     padding-top: 2px;
     display: flex;
     justify-content: center;
-    /* align-items: center; */
 }
 
 .bottom-line {

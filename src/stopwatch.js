@@ -3,20 +3,19 @@ import { getFormattedTime, idCounter, updateNewRunningLap, createLapHTML, paintH
 createLapHTML(6);
 let generateLapId = idCounter();
 
-let interval = null;
-let isRunning = false;
-const laps = new Array();
-let lapId;
-
-let [previousTimeTimer, passedTimeTimer] = [null, null];
-let [previousTimeLap, passedTimeLap] = [null, null];
-let [highestLap, lowestLap] = [null, null];
-
 const $timer = document.getElementById('timer');
 const $startStopButton = document.getElementById('start-stop');
 const $lapResetButton = document.getElementById('lap-reset');
 const $lapList = document.getElementById('lap-list');
 let $runningLap = $lapList.firstElementChild;
+
+let [previousTimeTimer, passedTimeTimer] = [null, null];
+let [previousTimeLap, passedTimeLap] = [null, null];
+let [highestLap, lowestLap] = [null, null];
+let interval = null;
+let isRunning = false;
+const laps = new Array();
+let lapId;
 
 $startStopButton.innerText = 'Start';
 $lapResetButton.innerText = 'Reset';

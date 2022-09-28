@@ -25,10 +25,9 @@ export function idCounter() {
     };
 };
 
-export function updateNewRunningLap(lapId) {
-    const $runningLap = document.getElementById('lap-list').firstElementChild;
-    $runningLap.firstElementChild.innerText = `Lap ${lapId}`;
-    $runningLap.id = `lap-${lapId}`;
+export function updateNewRunningLap(runningLap, lapId) {
+    runningLap.firstElementChild.innerText = `Lap ${lapId}`;
+    runningLap.id = `lap-${lapId}`;
 };
 
 export function paintHighestLowest(lowestLap, highestLap, action) {
@@ -46,12 +45,11 @@ export function paintHighestLowest(lowestLap, highestLap, action) {
 
 export function createLapHTML(numberOfLaps) {
     const $lapList = document.getElementById('lap-list');
-    // TODO: Look up insertCell
-    for (let i=0; i<numberOfLaps; i++) {
-        const $lap = document.createElement('tr');
-        $lap.classList.add('lap');
-        $lap.appendChild(document.createElement('td'));
-        $lap.appendChild(document.createElement('td'));
-        $lapList.insertBefore($lap, $lapList.firstChild);
-    };
+    const $lap = $lapList.insertRow(0);
+    $lap.classList.add('lap');
+    $lap.insertCell(0);
+    $lap.insertCell(1);
+
+    numberOfLaps--;
+    numberOfLaps ? createLapHTML(numberOfLaps) : null;
 };
