@@ -50,8 +50,6 @@ const startTimer = () => {
     isRunning: true,
   };
 
-  // ?? is called nullish coalescing
-  // if the value on the right is null then use the left side value
   lapId = lapId ?? generateLapId(false);
 
   $startStopButton.innerText = 'Stop';
@@ -64,7 +62,7 @@ const startTimer = () => {
 
 const renderTime = (currentTimestamp) => {
   const startTime =
-    stopwatchState.startTime ?? currentTimestamp - stopwatchState.elapsedTime;
+    stopwatchState.startTime ? stopwatchState.startTime : (currentTimestamp - stopwatchState.elapsedTime);
   const elapsedTime = currentTimestamp - stopwatchState.startTime;
 
   stopwatchState = {
@@ -73,8 +71,6 @@ const renderTime = (currentTimestamp) => {
     elapsedTime,
   };
 
-  // random numbers that don't immediately make sense should be
-  // set to a const so that it is clear why that number is being used
   if (stopwatchState.elapsedTime > HOURLY_INDICATOR) {
     $timer.firstElementChild.classList.add('hourly');
   }
@@ -112,7 +108,6 @@ const recordLap = () => {
 
   stopwatchState = {
     ...stopwatchState,
-    // don't forget to makes sure the previous values of the laps array are there
     laps: [...stopwatchState.laps, newLap],
     lapTotalTime: stopwatchState.elapsedTime,
   };
@@ -124,8 +119,9 @@ const recordLap = () => {
   lapId = generateLapId(false);
 
   updateNewRunningLap($runningLap, lapId);
-  $lapList.lastElementChild.hasAttribute('id') ??
-    $lapList.removeChild($lapList.lastElementChild);
+  $lapList.lastElementChild.hasAttribute('id') 
+    ? null
+    : $lapList.removeChild($lapList.lastElementChild);
 };
 
 const calculateHighestLowestLap = (newLap) => {
@@ -159,7 +155,7 @@ const calculateHighestLowestLap = (newLap) => {
     };
   }
 
-  if (stopwatchState.laps.length >= 2) {
+  if (stopwatchState.laps?.length >= 2) {
     indicateHighestLowestLap(
       stopwatchState.lowestLap,
       stopwatchState.highestLap,
