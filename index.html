@@ -1,60 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div class="main-wrapper">
-        <div id="timer" class="crontab">
-            <span>00:00.00</span> 
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="main-wrapper">
+      <div id="timer" class="crontab">
+        <time>00:00.00</time>
+      </div>
+      <section class="buttons-container">
+        <div class="button-wrapper">
+          <button id="lap-reset" class="active-reset"></button>
         </div>
-        <div class="buttons-container">
-            <div class="button-wrapper">
-                <button id="lap-reset" class="active-reset"></button>
-            </div>
-            <div class="circle-wrapper">
-                <div class="circle"></div>
-                <div class="circle"></div>
-            </div>
-            <div class="button-wrapper">
-                <button id="start-stop" class="active-start"></button>
-            </div>
+        <div class="circle-wrapper">
+          <div class="circle"></div>
+          <div class="circle"></div>
         </div>
-        <div class="lap-container">
-            <table class="lap-table">
-                <tbody id="lap-list"></tbody>
-            </table>
+        <div class="button-wrapper">
+          <button id="start-stop" class="active-start"></button>
         </div>
-        <footer>
-            <div class="icon-wrapper">
-                <div class="icon">
-                    <img src="./assets/world-clock.png" alt="world clock icon">
-                    <p>World Clock</p>
-                </div>
-                <div class="icon">
-                    <img src="./assets/alarm-clock.png" alt="world clock icon">
-                    <p>Alarm</p>
-                </div>
-                <div class="icon">
-                    <img src="./assets/stopwatch.png" alt="world clock icon">
-                    <p>Stopwatch</p>
-                </div>
-                <div class="icon">
-                    <img src="./assets/timer.png" alt="world clock icon">
-                    <p>Timer</p>
-                </div>
-            </div>
-            <div class="bottom-wrapper">
-                <div class="bottom-line"></div>
-            </div>
-        </footer>
-    </div>
-    
+      </section>
+      <section class="lap-container">
+        <table class="lap-table">
+          <tbody id="lap-list"></tbody>
+        </table>
+      </section>
+      <footer>
+        <nav class="icon-wrapper">
+          <div class="icon">
+            <img src="./assets/globe.svg" alt="world clock icon" />
+            <p>World Clock</p>
+          </div>
+          <div class="icon">
+            <img src="./assets/alarm.svg" alt="world clock icon" />
+            <p>Alarm</p>
+          </div>
+          <div class="icon">
+            <img src="./assets/stopwatch.svg" alt="world clock icon" />
+            <p class="stopwatch-text">Stopwatch</p>
+          </div>
+          <div class="icon">
+            <img src="./assets/timer.svg" alt="world clock icon" />
+            <p>Timer</p>
+          </div>
+        </nav>
+        <div class="bottom-wrapper">
+          <hr class="bottom-line"></hr>
+        </div>
+      </footer>
+    </main>
+
     <!-- <script src="./src/stopwatch.js" type="module"></script> -->
-    <script src="./src/stopwatch-2.js" type="module"></script>
-</body>
+    <script src="./src/refactored-stopwatch.js" type="module"></script>
+  </body>
 </html>

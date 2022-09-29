@@ -1,233 +1,245 @@
 * {
-    margin: 0;
-    box-sizing: border-box;
-    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-    /* outline: 1px solid red !important; */
+  margin: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 :root {
-    --main-bg-color: #101010;
-    --grey-bg-color: #3E3E3E;
-    --start-bg-color: #172e1c;
-    --stop-bg-button: #331314;
-    --main-font-color: 255, 255, 255;
-    --green-font-color: #50d963;
-    --red-font-color: #f24034;
-    --main-icon-color: #666666;
+  --main-bg-color: #101010;
+  --grey-bg-color: #3e3e3e;
+  --start-bg-color: #172e1c;
+  --stop-bg-button: #331314;
+  --main-font-color: 255, 255, 255;
+  --green-font-color: #50d963;
+  --red-font-color: #f24034;
+  --main-icon-color: #666666;
+  --active-nav-icon-color: #ff9500;
 }
 
+/* any particular reason you are using absolute positioning? */
 .main-wrapper {
-    width: 390px; /* 0010 */
-    height: 844px;
-    margin: auto;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    display: grid;
-    grid-template-rows: 40% 15% 35% 10%;
-    background-color: var(--main-bg-color);
+  width: 390px; /* 0010 */
+  height: 844px;
+  margin: auto;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: grid;
+  grid-template-rows: 40% 15% 35% 10%;
+  background-color: var(--main-bg-color);
 }
 
 .inner > div {
-    width: 100%;
+  width: 100%;
 }
 
 /* Timer */
 
+/* any particular reason for em vs rem? */
 .crontab {
-    color: rgba(var(--main-font-color));
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 4.5em;
-    font-weight: 200;
-    padding-top: 20%;
-    font-variant-numeric: tabular-nums;
+  color: rgba(var(--main-font-color));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 4.5em;
+  font-weight: 200;
+  padding-top: 20%;
+  font-variant-numeric: tabular-nums;
 }
 
 .crontab span {
-    padding: 5%;
+  padding: 5%;
 }
 
+/* try to be consistent with your units of measure for the same properties */
 .crontab .hourly {
-    font-size: 4.5vh;
+  font-size: 4.5vh;
 }
 
 /* Buttons */
 
 .buttons-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 2%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2%;
 }
 
 .button-wrapper {
-    padding: 19%;
+  padding: 19%;
 }
 
 .button-wrapper > button {
-    border: 1px solid var(--main-bg-color);
-    border-radius: 50%;
-    height: 100%;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 0.9em;
-    font-weight: 300;
+  border: 1px solid var(--main-bg-color);
+  border-radius: 50%;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 300;
 }
 
 .active-reset {
-    background-color: var(--grey-bg-color);
-    box-shadow: 0 0 0 1.5px var(--grey-bg-color), inset 0 0 0 1px var(--main-bg-color);
-    color: rgba(var(--main-font-color), 1)
+  background-color: var(--grey-bg-color);
+  box-shadow: 0 0 0 1.5px var(--grey-bg-color),
+    inset 0 0 0 1px var(--main-bg-color);
+  color: rgba(var(--main-font-color), 1);
 }
 
 .active-start {
-    background-color: var(--start-bg-color);
-    box-shadow: 0 0 0 1.5px var(--start-bg-color), inset 0 0 0 1px var(--main-bg-color);
-    color: var(--green-font-color);
+  background-color: var(--start-bg-color);
+  box-shadow: 0 0 0 1.5px var(--start-bg-color),
+    inset 0 0 0 1px var(--main-bg-color);
+  color: var(--green-font-color);
 }
 
 .active-stop {
-    background-color: var(--stop-bg-button);
-    box-shadow: 0 0 0 1.5px var(--stop-bg-button), inset 0 0 0 1px var(--main-bg-color);
-    color: var(--red-font-color);
+  background-color: var(--stop-bg-button);
+  box-shadow: 0 0 0 1.5px var(--stop-bg-button),
+    inset 0 0 0 1px var(--main-bg-color);
+  color: var(--red-font-color);
 }
 
 /* Lil buttons in the middle */
 
 .circle-wrapper {
-    display: inline-flex;
-    flex-wrap: wrap;
-    gap: 7%;
-    justify-content: center;
-    align-items: center;
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 7%;
+  justify-content: center;
+  align-items: center;
 }
 
 .circle {
-    width: 7px;
-    height: 7px;
-    background-color: rgb(var(--main-font-color));
-    border-radius: 50%;
+  width: 7px;
+  height: 7px;
+  background-color: rgb(var(--main-font-color));
+  border-radius: 50%;
 }
 
 .circle:first-child {
-    background-color: rgb(var(--main-font-color));
+  background-color: rgb(var(--main-font-color));
 }
 
 .circle:last-child {
-    background-color: var(--grey-bg-color);
+  background-color: var(--grey-bg-color);
 }
 
 /* Laps */
 
 .lap-container {
-    padding: 0 3%;
-    font-size: 0.9rem;
-    font-weight: 300;
-    margin-right: 2px;
-    overflow: auto;
-    overflow-y: auto;
-    color: rgb(136, 136, 136, 0);
-    scrollbar-gutter: both-edges stable;
-    transition: color 0.8s ease-out;
-    /* Firefox support */
-    scrollbar-color: rgb(136, 136, 136, 1) var(--main-bg-color);
-    scrollbar-width: thin;
+  padding: 0 3%;
+  font-size: 0.9rem;
+  font-weight: 300;
+  margin-right: 2px;
+  overflow: auto;
+  overflow-y: auto;
+  color: rgb(136, 136, 136, 0);
+  scrollbar-gutter: both-edges stable;
+  transition: color 0.8s ease-out;
+  /* Firefox support */
+  scrollbar-color: rgb(136, 136, 136, 1) var(--main-bg-color);
+  scrollbar-width: thin;
 }
 
 .scrollbar-fade {
-    color: rgb(136, 136, 136, 0.8);
+  color: rgb(136, 136, 136, 0.8);
 }
 
 .lap-table {
-    color: rgb(var(--main-font-color));
-    width: 100%;
-    border-top: 1px solid #292929;
-    border-collapse: collapse; 
+  color: rgb(var(--main-font-color));
+  width: 100%;
+  border-top: 1px solid #292929;
+  border-collapse: collapse;
 }
 
 #lap-list tr td {
-    height: 2.8rem; /* 0102 */
+  height: 2.8rem; /* 0102 */
 }
 
 #lap-list tr td:last-child {
-    text-align: right;  /* 0112 */
+  text-align: right; /* 0112 */
 }
 
 .lap {
-    border-bottom: 1px solid #292929;
-    font-variant-numeric: tabular-nums;
+  border-bottom: 1px solid #292929;
+  font-variant-numeric: tabular-nums;
 }
 
 .highest {
-    color: #f24034;
-    color: rgba(242, 64, 52, 0.8);
+  color: #f24034;
+  color: rgba(242, 64, 52, 0.8);
 }
 
 .lowest {
-    color: #50d963;
-    color: rgba(80, 217, 99, 0.8);
+  color: #50d963;
+  color: rgba(80, 217, 99, 0.8);
 }
 
 /* Scrollbar */
 
 /* Width */
 .lap-container::-webkit-scrollbar {
-    width: 3px;  /* 0001 ? */
+  width: 3px; /* 0001 ? */
 }
 
 /* Handle */
 .lap-container::-webkit-scrollbar-thumb {
-    border-radius: 15pt;
-    box-shadow: inset 0 0 0 10px;
+  border-radius: 15pt;
+  box-shadow: inset 0 0 0 10px;
 }
 
 /* Footer */
 
 footer {
-    border-top: 1px solid #3a3a3a;  /* 0001 */
-    background-color: #181818;
-    color: var(--main-icon-color);
-    font-size: 0.6rem;
-    font-weight: bold;
+  border-top: 1px solid #3a3a3a; /* 0001 */
+  background-color: #181818;
+  color: var(--main-icon-color);
+  font-size: 0.6rem;
+  font-weight: bold;
 }
 
 .icon-wrapper {
-    display: flex;
-    justify-content: space-around;
-    padding: 2%;
+  display: flex;
+  justify-content: space-around;
+  padding: 2%;
 }
 
 .icon {
-    width: 20%;
+  width: 20%;
+  display: flex;
+  flex-direction: column;
 }
 
 footer img {
-    display: block;
-    margin: auto;
-    width: 40%;
+  display: block;
+  margin: auto;
+  width: 40%;
 }
 
 footer p {
-    text-align: center;
-    padding-top: 2px;
+  text-align: center;
+  padding-top: 2px;
 }
 
 .bottom-wrapper {
-    padding-top: 2px;
-    display: flex;
-    justify-content: center;
+  padding-top: 2px;
+  display: flex;
+  justify-content: center;
 }
 
 .bottom-line {
-    background-color: rgba(var(--main-font-color), 1);
-    width: 40%;
-    height: 5px;
-    border-radius: 3px;
-    margin: 2% 0;
+  background-color: rgba(var(--main-font-color), 1);
+  width: 40%;
+  height: 5px;
+  border-radius: 3px;
+  margin: 2% 0;
+}
+
+.stopwatch-text {
+  color: var(--active-nav-icon-color);
 }
