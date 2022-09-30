@@ -4,10 +4,6 @@
 
 The main objective is to build a stopwatch as similar to the one in iOS systems as possible using vanilla Javascript and CSS / HTML.
 
-Approximate reference:
-
-![stop pic](assets/stop.png)
-
 #
 
 ## Functionality
@@ -17,4 +13,5 @@ The stopwatch should have the following features:
 - Pausing the timer.
 - Resetting the timer to zero.
 - Recording laps while the timer is running.
-- (Optional) The longest lap should be painted red, the shortest, green.
+- The longest lap should be painted red, the shortest, green.
+- (Optional) When timer gets to hour counts, the clock should add them to the display.
