@@ -1,7 +1,7 @@
 import { 
     getFormattedTime, 
     createIdCounter, 
-    updateNewRunningLap, 
+    updateFirstLapRow, 
     indicateHighestLowestLap,
     generateLapRows 
 } from './utils.js';
@@ -16,14 +16,12 @@ const $startStopButton = document.getElementById('start-stop');
 const $lapResetButton = document.getElementById('lap-reset');
 const $lapList = document.getElementById('lap-list');
 
-let $runningLap = $lapList.firstElementChild;
-
 const initialState = {
     startTime: 0,
     elapsedTime: 0,
     lapTotalTime: 0,
-    highestLap: 0,
-    lowestLap: 0,
+    highestLap: { id: undefined, interval: 0 },
+    lowestLap: { id: undefined, interval: Infinity },
     laps: [],
     isRunning: false,
 };
@@ -35,18 +33,8 @@ let stopwatchState = {
 let timerAnimationId;
 let lapId;
 
-$startStopButton.innerText = 'Start';
-$lapResetButton.innerText = 'Reset';
-
-$startStopButton.onclick = () => {
-    stopwatchState.isRunning ? pauseTimer() : startTimer();
-};
-
-$lapResetButton.onclick = () => {
-    stopwatchState.isRunning ? recordLap() : resetTimer();
-};
-
-const startTimer = () => {
+/* Timer functions */
+function startTimer() {
     stopwatchState = {
         ...stopwatchState,
         isRunning: true,
@@ -54,38 +42,41 @@ const startTimer = () => {
     
     lapId = lapId ?? generateLapId(false);
 
-    $startStopButton.innerText = 'Stop';
-    $startStopButton.classList.replace('active-start', 'active-stop');
-    $lapResetButton.innerText = 'Lap';
-
-    if (!$runningLap.hasAttribute('id')) {
-        updateNewRunningLap($runningLap, lapId);
-    };
+    if (lapId === 1) updateFirstLapRow($lapList.firstElementChild, lapId);
 
     window.requestAnimationFrame(renderTime);
-}
+};
 
-const renderTime = (currentTimestamp) => {
-    const startTime = stopwatchState.startTime || (currentTimestamp - stopwatchState.elapsedTime);
-    const elapsedTime = (currentTimestamp - startTime);
+function renderTime(currentTimestamp) {
+    const passedTime = calculateTime(currentTimestamp);
 
     stopwatchState = {
         ...stopwatchState,
-        startTime,
-        elapsedTime,
+        startTime: passedTime.startTime,
+        elapsedTime: passedTime.elapsedTime,
     };
     
     if (stopwatchState.elapsedTime > HOURLY_INDICATOR) {
         $timer.firstElementChild.classList.add('hourly')
     };
 
-    $timer.firstElementChild.innerText = getFormattedTime(stopwatchState.elapsedTime);
-    $runningLap.lastElementChild.innerText = getFormattedTime(stopwatchState.elapsedTime - stopwatchState.lapTotalTime);
+    updateTimers();
     
     timerAnimationId = window.requestAnimationFrame(renderTime);
 };
 
-const pauseTimer = () => {
+function updateTimers() {
+    $timer.firstElementChild.innerText = getFormattedTime(stopwatchState.elapsedTime);
+    $lapList.firstElementChild.lastElementChild.innerText = getFormattedTime(stopwatchState.elapsedTime - stopwatchState.lapTotalTime);
+};
+
+function calculateTime(currentTimestamp) {
+    const startTime = stopwatchState.startTime || (currentTimestamp - stopwatchState.elapsedTime);
+    const elapsedTime = (currentTimestamp - startTime);
+    return { startTime, elapsedTime };
+};
+
+function pauseTimer() {
     window.cancelAnimationFrame(timerAnimationId);
 
     stopwatchState = {
@@ -93,14 +84,28 @@ const pauseTimer = () => {
         isRunning: false,
         startTime: 0,
     };
-
-    $startStopButton.innerText = 'Start';
-    $startStopButton.classList.replace('active-stop', 'active-start');
-    $lapResetButton.innerText = 'Reset';
 };
 
-const recordLap = () => {
-    let newLap = { 
+function resetTimer() {
+    stopwatchState = {
+        ...initialState,
+    };
+
+    lapId = generateLapId(true);    
+
+    emptyLapTable();
+
+    $timer.firstElementChild.innerText = '00:00.00';
+};
+
+function emptyLapTable() {
+    $lapList.replaceChildren();
+    generateLapRows(6);
+};
+
+/* Lap functions */
+function recordLap() {
+    const newLap = { 
         id: lapId, 
         interval: stopwatchState.elapsedTime - stopwatchState.lapTotalTime 
     };
@@ -111,34 +116,28 @@ const recordLap = () => {
         lapTotalTime: stopwatchState.elapsedTime,
     };
 
-    calculateHighestLowestLap(newLap);
-    generateLapRows(1);
-
-    $runningLap = $lapList.firstElementChild;
     lapId = generateLapId(false);
-
-    updateNewRunningLap($runningLap, lapId);
-    $lapList.lastElementChild.hasAttribute('id') || $lapList.removeChild($lapList.lastElementChild);
+    calculateHighestLowestLap(newLap);
+    updateLapTable();
 };
 
-const calculateHighestLowestLap = (newLap) => {
-    if (stopwatchState.laps?.length >= 2) {
-        indicateHighestLowestLap(
-            stopwatchState.lowestLap,
-            stopwatchState.highestLap,
-            'remove',
-        );
-    };
-    
-    if (stopwatchState.laps?.length === 1) {
-        stopwatchState = {
-            ...stopwatchState,
-            lowestLap: newLap,
-            highestLap: newLap,
-        };
-    };
-    
+function updateLapTable() {
+    generateLapRows(1);
+    updateFirstLapRow($lapList.firstElementChild, lapId);
+    removeEmptyRow($lapList.lastElementChild);
+};
+
+function removeEmptyRow(lastRow) {
+    lastRow.innerText.trim() !== '' || $lapList.removeChild(lastRow);
+};
+
+function calculateHighestLowestLap(newLap) {
+
     if (newLap.interval < stopwatchState.lowestLap.interval) {
+        if (stopwatchState.laps?.length > 2) {
+            indicateHighestLowestLap(stopwatchState.lowestLap, null, 'remove');
+            indicateHighestLowestLap(newLap, null, 'add');
+        };
         stopwatchState = {
             ...stopwatchState,
             lowestLap: newLap,
@@ -146,33 +145,37 @@ const calculateHighestLowestLap = (newLap) => {
     };
 
     if (newLap.interval > stopwatchState.highestLap.interval) {
+        if (stopwatchState.laps?.length > 2) {
+            indicateHighestLowestLap(null, stopwatchState.highestLap, 'remove');
+            indicateHighestLowestLap(null, newLap, 'add');
+        };
         stopwatchState = {
             ...stopwatchState,
             highestLap: newLap,
         };
     };
 
-    if (stopwatchState.laps?.length >= 2) {
-        indicateHighestLowestLap(
-            stopwatchState.lowestLap,
-            stopwatchState.highestLap,
-            'add',
-        );
+    if (stopwatchState.laps?.length === 2) {
+        indicateHighestLowestLap(stopwatchState.lowestLap, stopwatchState.highestLap, 'add');
     };
 };
 
-const resetTimer = () => {
-    stopwatchState = {
-        ...initialState,
+$startStopButton.onclick = () => {
+    if (stopwatchState.isRunning) {
+        pauseTimer();
+        $startStopButton.innerText = 'Start';
+        $startStopButton.classList.replace('active-stop', 'active-start');
+        $lapResetButton.innerText = 'Reset';
+    } else {
+        startTimer();
+        $startStopButton.innerText = 'Stop';
+        $startStopButton.classList.replace('active-start', 'active-stop');
+        $lapResetButton.innerText = 'Lap';
     };
+};
 
-    lapId = generateLapId(true);    
-
-    $lapList.replaceChildren();
-    $timer.firstElementChild.innerText = '00:00.00';
-
-    generateLapRows(6);
-    $runningLap = $lapList.firstElementChild;
+$lapResetButton.onclick = () => {
+    stopwatchState.isRunning ? recordLap() : resetTimer();
 };
 
 $lapList.addEventListener('wheel', () => {

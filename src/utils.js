@@ -27,21 +27,21 @@ function createIdCounter() {
     };
 };
 
-function updateNewRunningLap(runningLap, lapId) {
-    runningLap.firstElementChild.innerText = `Lap ${lapId}`;
-    runningLap.id = `lap-${lapId}`;
+function updateFirstLapRow(firstLap, lapId) {
+    firstLap.firstElementChild.innerText = `Lap ${lapId}`;
+    firstLap.id = `lap-${lapId}`;
 };
 
 function indicateHighestLowestLap(lowestLap, highestLap, action) {
-    const lowest = document.getElementById(`lap-${lowestLap.id}`);
-    const highest = document.getElementById(`lap-${highestLap.id}`);
+    const lowest = lowestLap ? document.getElementById(`lap-${lowestLap?.id}`) : null;
+    const highest = highestLap ? document.getElementById(`lap-${highestLap?.id}`) : null;
 
     if (action === 'remove') {
-        lowest.classList.remove('highest', 'lowest');
-        highest.classList.remove('highest', 'lowest');
+        lowest?.classList.remove('highest', 'lowest');
+        highest?.classList.remove('highest', 'lowest');
     } else {
-        lowest.classList.add('lowest');
-        highest.classList.add('highest');
+        lowest?.classList.add('lowest');
+        highest?.classList.add('highest');
     }
 };
 
@@ -56,13 +56,13 @@ function generateLapRows(numberOfLaps) {
 
     if (numberOfLaps > 0) {
         generateLapRows(numberOfLaps);
-    }
+    };
 };
 
 export {
     getFormattedTime,
     createIdCounter,
-    updateNewRunningLap,
+    updateFirstLapRow,
     indicateHighestLowestLap,
     generateLapRows,
 };
