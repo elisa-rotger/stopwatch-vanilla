@@ -16,8 +16,6 @@
   --active-nav-icon-color: #ff9500;
 }
 
-/* any particular reason you are using absolute positioning? */
-/* not really, I was just looking for a quick way to center the main container to the page */
 .main-wrapper {
   width: 390px; /* 0010 */
   height: 844px;
@@ -39,11 +37,6 @@
 /* Timer */
 
 /* any particular reason for em vs rem? */
-
-/* not really, I was trying to change font size dynamically to the container size */
-/* it was not a success */
-/* I tested different relative units until something worked */
-/* im still figuring out the differences between these units and when to apply one or the other */
 .crontab {
   color: rgba(var(--main-font-color));
   display: flex;

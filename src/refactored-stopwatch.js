@@ -61,8 +61,7 @@ const startTimer = () => {
 };
 
 const renderTime = (currentTimestamp) => {
-  const startTime =
-    stopwatchState.startTime ? stopwatchState.startTime : (currentTimestamp - stopwatchState.elapsedTime);
+  const startTime = stopwatchState.startTime || (currentTimestamp - stopwatchState.elapsedTime);
   const elapsedTime = currentTimestamp - stopwatchState.startTime;
 
   stopwatchState = {
@@ -119,9 +118,7 @@ const recordLap = () => {
   lapId = generateLapId(false);
 
   updateNewRunningLap($runningLap, lapId);
-  $lapList.lastElementChild.hasAttribute('id') 
-    ? null
-    : $lapList.removeChild($lapList.lastElementChild);
+  $lapList.lastElementChild.hasAttribute('id') || $lapList.removeChild($lapList.lastElementChild);
 };
 
 const calculateHighestLowestLap = (newLap) => {
