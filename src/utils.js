@@ -1,23 +1,25 @@
-export function getFormattedTime(totalMilliseconds) {
+function getFormattedTime(totalMilliseconds) {
     let totalCentiseconds = Math.floor((totalMilliseconds % 1000) / 10);
     let totalSeconds = Math.floor(totalMilliseconds / 1000) % 60;
     let totalMinutes = Math.floor((totalMilliseconds / 1000) / 60) % 60;
     let totalHours = Math.floor(((totalMilliseconds / 1000) / 60) / 60);
     
     // TODO: Refactor formatNumber so it takes all of them at once
+    totalCentiseconds = formatNumber(totalCentiseconds, 2, '0');
     totalSeconds = formatNumber(totalSeconds, 2, '0');
     totalMinutes = formatNumber(totalMinutes, 2, '0');
     totalHours = totalHours ? formatNumber(totalHours, 3, '0') : null;
-    totalCentiseconds = formatNumber(totalCentiseconds, 2, '0');
     
-    return totalHours ? `${totalHours}:${totalMinutes}:${totalSeconds}.${totalCentiseconds}` : `${totalMinutes}:${totalSeconds}.${totalCentiseconds}`;
+    return totalHours 
+        ? `${totalHours}:${totalMinutes}:${totalSeconds}.${totalCentiseconds}` 
+        : `${totalMinutes}:${totalSeconds}.${totalCentiseconds}`;
 };
 
-export function formatNumber(num, length, character) {
+function formatNumber(num, length, character) {
     return num.toString().padStart(length, character);
 };
 
-export function idCounter() {
+function createIdCounter() {
     let count = 0;
     return function generateId(reset) {
         if (reset) count = 0;
@@ -25,12 +27,12 @@ export function idCounter() {
     };
 };
 
-export function updateNewRunningLap(runningLap, lapId) {
+function updateNewRunningLap(runningLap, lapId) {
     runningLap.firstElementChild.innerText = `Lap ${lapId}`;
     runningLap.id = `lap-${lapId}`;
 };
 
-export function paintHighestLowest(lowestLap, highestLap, action) {
+function indicateHighestLowestLap(lowestLap, highestLap, action) {
     const lowest = document.getElementById(`lap-${lowestLap.id}`);
     const highest = document.getElementById(`lap-${highestLap.id}`);
 
@@ -43,7 +45,7 @@ export function paintHighestLowest(lowestLap, highestLap, action) {
     }
 };
 
-export function createLapHTML(numberOfLaps) {
+function generateLapRows(numberOfLaps) {
     const $lapList = document.getElementById('lap-list');
     const $lap = $lapList.insertRow(0);
     $lap.classList.add('lap');
@@ -51,5 +53,16 @@ export function createLapHTML(numberOfLaps) {
     $lap.insertCell(1);
 
     numberOfLaps--;
-    numberOfLaps ? createLapHTML(numberOfLaps) : null;
+
+    if (numberOfLaps > 0) {
+        generateLapRows(numberOfLaps);
+    }
+};
+
+export {
+    getFormattedTime,
+    createIdCounter,
+    updateNewRunningLap,
+    indicateHighestLowestLap,
+    generateLapRows,
 };

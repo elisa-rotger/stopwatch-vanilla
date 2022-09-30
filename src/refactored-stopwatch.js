@@ -1,7 +1,15 @@
-import { getFormattedTime, idCounter, updateNewRunningLap, createLapHTML, paintHighestLowest } from './utils.js';
+import { 
+    getFormattedTime, 
+    createIdCounter, 
+    updateNewRunningLap, 
+    indicateHighestLowestLap,
+    generateLapRows 
+} from './utils.js';
 
-createLapHTML(6);
-let generateLapId = idCounter();
+generateLapRows(6);
+
+const HOURLY_INDICATOR = 3600000;
+const generateLapId = createIdCounter();
 
 const $timer = document.getElementById('timer');
 const $startStopButton = document.getElementById('start-stop');
@@ -10,54 +18,81 @@ const $lapList = document.getElementById('lap-list');
 
 let $runningLap = $lapList.firstElementChild;
 
-let [startTime, elapsedTime, lapTotalTime] = [null, null, null];
-let [highestLap, lowestLap] = [null, null];
-let isRunning = false;
-let laps = [];
-let myTimer;
+const initialState = {
+    startTime: 0,
+    elapsedTime: 0,
+    lapTotalTime: 0,
+    highestLap: 0,
+    lowestLap: 0,
+    laps: [],
+    isRunning: false,
+};
+
+let stopwatchState = {
+    ...initialState,
+};
+
+let timerAnimationId;
 let lapId;
 
 $startStopButton.innerText = 'Start';
 $lapResetButton.innerText = 'Reset';
 
 $startStopButton.onclick = () => {
-    isRunning ? pauseTimer() : startTimer();
+    stopwatchState.isRunning ? pauseTimer() : startTimer();
 };
 
 $lapResetButton.onclick = () => {
-    isRunning ? recordLap() : resetTimer();
+    stopwatchState.isRunning ? recordLap() : resetTimer();
 };
 
 const startTimer = () => {
-    isRunning = true;
-    lapId = lapId ? lapId : generateLapId(false);
+    stopwatchState = {
+        ...stopwatchState,
+        isRunning: true,
+    };
+    
+    lapId = lapId ?? generateLapId(false);
 
     $startStopButton.innerText = 'Stop';
     $startStopButton.classList.replace('active-start', 'active-stop');
     $lapResetButton.innerText = 'Lap';
 
-    updateNewRunningLap($runningLap, lapId);
+    if (!$runningLap.hasAttribute('id')) {
+        updateNewRunningLap($runningLap, lapId);
+    };
 
     window.requestAnimationFrame(renderTime);
 }
 
 const renderTime = (currentTimestamp) => {
+    const startTime = stopwatchState.startTime || (currentTimestamp - stopwatchState.elapsedTime);
+    const elapsedTime = (currentTimestamp - startTime);
 
-    startTime = startTime ? startTime : (currentTimestamp - elapsedTime);
-    elapsedTime = (currentTimestamp - startTime);
+    stopwatchState = {
+        ...stopwatchState,
+        startTime,
+        elapsedTime,
+    };
     
-    elapsedTime > 3600000 ? $timer.firstElementChild.classList.add('hourly') : null;
+    if (stopwatchState.elapsedTime > HOURLY_INDICATOR) {
+        $timer.firstElementChild.classList.add('hourly')
+    };
 
-    $timer.firstElementChild.innerText = getFormattedTime(elapsedTime);
-    $runningLap.lastElementChild.innerText = getFormattedTime(elapsedTime - lapTotalTime);
+    $timer.firstElementChild.innerText = getFormattedTime(stopwatchState.elapsedTime);
+    $runningLap.lastElementChild.innerText = getFormattedTime(stopwatchState.elapsedTime - stopwatchState.lapTotalTime);
     
-    myTimer = window.requestAnimationFrame(renderTime);
+    timerAnimationId = window.requestAnimationFrame(renderTime);
 };
 
 const pauseTimer = () => {
-    window.cancelAnimationFrame(myTimer);
-    isRunning = false;
-    startTime = null;
+    window.cancelAnimationFrame(timerAnimationId);
+
+    stopwatchState = {
+        ...stopwatchState,
+        isRunning: false,
+        startTime: 0,
+    };
 
     $startStopButton.innerText = 'Start';
     $startStopButton.classList.replace('active-stop', 'active-start');
@@ -65,38 +100,78 @@ const pauseTimer = () => {
 };
 
 const recordLap = () => {
-    let newLap = { id: lapId, interval: elapsedTime - lapTotalTime };
-    laps = [...laps, newLap];
-    lapTotalTime = elapsedTime;
+    let newLap = { 
+        id: lapId, 
+        interval: stopwatchState.elapsedTime - stopwatchState.lapTotalTime 
+    };
 
-    calculateHighestLowest(newLap);
+    stopwatchState = {
+        ...stopwatchState,
+        laps: [...stopwatchState.laps, newLap],
+        lapTotalTime: stopwatchState.elapsedTime,
+    };
 
-    createLapHTML(1);
+    calculateHighestLowestLap(newLap);
+    generateLapRows(1);
+
     $runningLap = $lapList.firstElementChild;
     lapId = generateLapId(false);
+
     updateNewRunningLap($runningLap, lapId);
-    $lapList.lastElementChild.hasAttribute('id') ? null : $lapList.removeChild($lapList.lastElementChild);  
+    $lapList.lastElementChild.hasAttribute('id') || $lapList.removeChild($lapList.lastElementChild);
 };
 
-const calculateHighestLowest = (newLap) => {
-    laps.length >= 2 ? paintHighestLowest(lowestLap, highestLap, 'remove') : null;
+const calculateHighestLowestLap = (newLap) => {
+    if (stopwatchState.laps?.length >= 2) {
+        indicateHighestLowestLap(
+            stopwatchState.lowestLap,
+            stopwatchState.highestLap,
+            'remove',
+        );
+    };
     
-    if (laps.length === 1) lowestLap = newLap, highestLap = newLap;
+    if (stopwatchState.laps?.length === 1) {
+        stopwatchState = {
+            ...stopwatchState,
+            lowestLap: newLap,
+            highestLap: newLap,
+        };
+    };
     
-    if (newLap.interval < lowestLap.interval) lowestLap = newLap;
-    if (newLap.interval > highestLap.interval) highestLap = newLap;
+    if (newLap.interval < stopwatchState.lowestLap.interval) {
+        stopwatchState = {
+            ...stopwatchState,
+            lowestLap: newLap,
+        };
+    };
 
-    laps.length >= 2 ? paintHighestLowest(lowestLap, highestLap, 'add') : null;
+    if (newLap.interval > stopwatchState.highestLap.interval) {
+        stopwatchState = {
+            ...stopwatchState,
+            highestLap: newLap,
+        };
+    };
+
+    if (stopwatchState.laps?.length >= 2) {
+        indicateHighestLowestLap(
+            stopwatchState.lowestLap,
+            stopwatchState.highestLap,
+            'add',
+        );
+    };
 };
 
 const resetTimer = () => {
-    [startTime, elapsedTime, lapTotalTime] = [null, null, null];
-    laps = [];
+    stopwatchState = {
+        ...initialState,
+    };
+
     lapId = generateLapId(true);    
+
     $lapList.replaceChildren();
     $timer.firstElementChild.innerText = '00:00.00';
 
-    createLapHTML(6);
+    generateLapRows(6);
     $runningLap = $lapList.firstElementChild;
 };
 
