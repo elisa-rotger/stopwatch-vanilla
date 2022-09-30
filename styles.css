@@ -10,6 +10,7 @@
   --grey-bg-color: #3e3e3e;
   --start-bg-color: #172e1c;
   --stop-bg-button: #331314;
+  --disabled-bg-button: #2d2b2b;
   --main-font-color: 255, 255, 255;
   --green-font-color: #50d963;
   --red-font-color: #f24034;
@@ -84,23 +85,25 @@
 
 .active-reset {
   background-color: var(--grey-bg-color);
-  box-shadow: 0 0 0 1.5px var(--grey-bg-color),
-    inset 0 0 0 1px var(--main-bg-color);
+  box-shadow: 0 0 0 1.5px var(--grey-bg-color), inset 0 0 0 1px var(--main-bg-color);
   color: rgba(var(--main-font-color), 1);
 }
 
 .active-start {
   background-color: var(--start-bg-color);
-  box-shadow: 0 0 0 1.5px var(--start-bg-color),
-    inset 0 0 0 1px var(--main-bg-color);
+  box-shadow: 0 0 0 1.5px var(--start-bg-color), inset 0 0 0 1px var(--main-bg-color);
   color: var(--green-font-color);
 }
 
 .active-stop {
   background-color: var(--stop-bg-button);
-  box-shadow: 0 0 0 1.5px var(--stop-bg-button),
-    inset 0 0 0 1px var(--main-bg-color);
+  box-shadow: 0 0 0 1.5px var(--stop-bg-button), inset 0 0 0 1px var(--main-bg-color);
   color: var(--red-font-color);
+}
+
+.active-reset:disabled {
+  background-color: var(--disabled-bg-button);
+  cursor: auto;
 }
 
 /* Lil buttons in the middle */

@@ -4,17 +4,17 @@ import {
   updateFirstLapRow,
   indicateHighestLowestLap,
   generateLapRows,
-} from "./utils.js"
+} from './utils.js'
 
 generateLapRows(6)
 
 const HOURLY_INDICATOR = 3600000
 const generateLapId = createIdCounter()
 
-const $timer = document.getElementById("timer")
-const $startStopButton = document.getElementById("start-stop")
-const $lapResetButton = document.getElementById("lap-reset")
-const $lapList = document.getElementById("lap-list")
+const $timer = document.getElementById('timer')
+const $startStopButton = document.getElementById('start-stop')
+const $lapResetButton = document.getElementById('lap-reset')
+const $lapList = document.getElementById('lap-list')
 
 const initialState = {
   startTime: 0,
@@ -57,7 +57,7 @@ function renderTime(currentTimestamp) {
   }
 
   if (stopwatchState.elapsedTime > HOURLY_INDICATOR) {
-    $timer.firstElementChild.classList.add("hourly")
+    $timer.firstElementChild.classList.add('hourly')
   }
 
   updateTimers()
@@ -66,17 +66,14 @@ function renderTime(currentTimestamp) {
 }
 
 function updateTimers() {
-  $timer.firstElementChild.innerText = getFormattedTime(
-    stopwatchState.elapsedTime
-  )
+  $timer.firstElementChild.innerText = getFormattedTime(stopwatchState.elapsedTime)
   $lapList.firstElementChild.lastElementChild.innerText = getFormattedTime(
-    stopwatchState.elapsedTime - stopwatchState.lapTotalTime
+    stopwatchState.elapsedTime - stopwatchState.lapTotalTime,
   )
 }
 
 function calculateTime(currentTimestamp) {
-  const startTime =
-    stopwatchState.startTime || currentTimestamp - stopwatchState.elapsedTime
+  const startTime = stopwatchState.startTime || currentTimestamp - stopwatchState.elapsedTime
   const elapsedTime = currentTimestamp - startTime
   return { startTime, elapsedTime }
 }
@@ -100,7 +97,7 @@ function resetTimer() {
 
   emptyLapTable()
 
-  $timer.firstElementChild.innerText = "00:00.00"
+  $timer.firstElementChild.innerText = '00:00.00'
 }
 
 function emptyLapTable() {
@@ -133,14 +130,14 @@ function updateLapTable() {
 }
 
 function removeEmptyRow(lastRow) {
-  lastRow.innerText.trim() !== "" || $lapList.removeChild(lastRow)
+  lastRow.innerText.trim() !== '' || $lapList.removeChild(lastRow)
 }
 
 function calculateHighestLowestLap(newLap) {
   if (newLap.interval < stopwatchState.lowestLap.interval) {
     if (stopwatchState.laps?.length > 2) {
-      indicateHighestLowestLap(stopwatchState.lowestLap, null, "remove")
-      indicateHighestLowestLap(newLap, null, "add")
+      indicateHighestLowestLap(stopwatchState.lowestLap, null, 'remove')
+      indicateHighestLowestLap(newLap, null, 'add')
     }
     stopwatchState = {
       ...stopwatchState,
@@ -150,8 +147,8 @@ function calculateHighestLowestLap(newLap) {
 
   if (newLap.interval > stopwatchState.highestLap.interval) {
     if (stopwatchState.laps?.length > 2) {
-      indicateHighestLowestLap(null, stopwatchState.highestLap, "remove")
-      indicateHighestLowestLap(null, newLap, "add")
+      indicateHighestLowestLap(null, stopwatchState.highestLap, 'remove')
+      indicateHighestLowestLap(null, newLap, 'add')
     }
     stopwatchState = {
       ...stopwatchState,
@@ -160,37 +157,40 @@ function calculateHighestLowestLap(newLap) {
   }
 
   if (stopwatchState.laps?.length === 2) {
-    indicateHighestLowestLap(
-      stopwatchState.lowestLap,
-      stopwatchState.highestLap,
-      "add"
-    )
+    indicateHighestLowestLap(stopwatchState.lowestLap, stopwatchState.highestLap, 'add')
   }
 }
 
 $startStopButton.onclick = () => {
   if (stopwatchState.isRunning) {
     pauseTimer()
-    $startStopButton.innerText = "Start"
-    $startStopButton.classList.replace("active-stop", "active-start")
-    $lapResetButton.innerText = "Reset"
+    // figure out when to disable the reset button
+    $startStopButton.innerText = 'Start'
+    $startStopButton.classList.replace('active-stop', 'active-start')
+    $lapResetButton.innerText = 'Reset'
   } else {
     startTimer()
-    $startStopButton.innerText = "Stop"
-    $startStopButton.classList.replace("active-start", "active-stop")
-    $lapResetButton.innerText = "Lap"
+    $startStopButton.innerText = 'Stop'
+    $startStopButton.classList.replace('active-start', 'active-stop')
+    $lapResetButton.innerText = 'Lap'
+    $lapResetButton.disabled = false
   }
 }
 
 $lapResetButton.onclick = () => {
-  stopwatchState.isRunning ? recordLap() : resetTimer()
+  if (stopwatchState.isRunning) {
+    recordLap()
+  } else {
+    resetTimer()
+    $lapResetButton.disabled = true
+  }
 }
 
-$lapList.addEventListener("wheel", () => {
-  const $lapContainer = document.querySelector(".lap-container")
-  $lapContainer.classList.add("scrollbar-fade")
+$lapList.addEventListener('wheel', () => {
+  const $lapContainer = document.querySelector('.lap-container')
+  $lapContainer.classList.add('scrollbar-fade')
 
   setTimeout(() => {
-    $lapContainer.classList.remove("scrollbar-fade")
+    $lapContainer.classList.remove('scrollbar-fade')
   }, 1500)
 })
