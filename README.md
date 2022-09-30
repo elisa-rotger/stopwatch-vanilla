@@ -9,6 +9,7 @@ The main objective is to build a stopwatch as similar to the one in iOS systems 
 ## Functionality
 
 The stopwatch should have the following features:
+
 - Start the timer, count in minutes, seconds and milliseconds.
 - Pausing the timer.
 - Resetting the timer to zero.
