@@ -8,11 +8,11 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="main-wrapper">
+    <main class="main-wrapper">
         <div id="timer" class="crontab">
-            <span>00:00.00</span> 
+            <time>00:00.00</time> 
         </div>
-        <div class="buttons-container">
+        <section class="buttons-container">
             <div class="button-wrapper">
                 <button id="lap-reset" class="active-reset"></button>
             </div>
@@ -23,14 +23,14 @@
             <div class="button-wrapper">
                 <button id="start-stop" class="active-start"></button>
             </div>
-        </div>
-        <div class="lap-container">
+        </section>
+        <section class="lap-container">
             <table class="lap-table">
                 <tbody id="lap-list"></tbody>
             </table>
-        </div>
+        </section>
         <footer>
-            <div class="icon-wrapper">
+            <nav class="icon-wrapper">
                 <div class="icon">
                     <img src="./assets/world-clock.png" alt="world clock icon">
                     <p>World Clock</p>
@@ -41,18 +41,18 @@
                 </div>
                 <div class="icon">
                     <img src="./assets/stopwatch.png" alt="world clock icon">
-                    <p>Stopwatch</p>
+                    <p class="stopwatch-text">Stopwatch</p>
                 </div>
                 <div class="icon">
                     <img src="./assets/timer.png" alt="world clock icon">
                     <p>Timer</p>
                 </div>
-            </div>
+            </nav>
             <div class="bottom-wrapper">
                 <div class="bottom-line"></div>
             </div>
         </footer>
-    </div>
+    </main>
     
     <!-- <script src="./src/stopwatch.js" type="module"></script> -->
     <script src="./src/refactored-stopwatch.js" type="module"></script>
