@@ -164,7 +164,6 @@ function calculateHighestLowestLap(newLap) {
 $startStopButton.onclick = () => {
   if (stopwatchState.isRunning) {
     pauseTimer()
-    // figure out when to disable the reset button
     $startStopButton.innerText = 'Start'
     $startStopButton.classList.replace('active-stop', 'active-start')
     $lapResetButton.innerText = 'Reset'

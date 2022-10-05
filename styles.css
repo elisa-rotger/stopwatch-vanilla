@@ -1,5 +1,4 @@
 * {
-  margin: 0;
   box-sizing: border-box;
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
   /* outline: 1px solid red !important; */
@@ -18,15 +17,17 @@
   --active-nav-icon-color: #ff9500;
 }
 
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
 .main-wrapper {
   width: 390px; /* 0010 */
   height: 844px;
-  margin: auto;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
   display: grid;
   grid-template-rows: 40% 15% 35% 10%;
   background-color: var(--main-bg-color);
